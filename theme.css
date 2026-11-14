@@ -606,24 +606,39 @@ select:focus-visible,
   color: #ffffff;
 }
 
+/* Settings / popout windows use the compact native titlebar. */
+body.is-popout-window .titlebar-button,
+body.is-popout-modal .titlebar-button {
+  top: 0 !important;
+  border-radius: 0;
+}
+
+body.is-popout-window .titlebar-button.mod-close:hover,
+body.is-popout-modal .titlebar-button.mod-close:hover {
+  border-radius: 0;
+  background: #e5484d;
+}
+
 /* Windows/Linux window controls: center them with the 58px tab strip
    instead of the shorter native titlebar row. */
-body.mod-windows
+body.mod-windows:not(.is-popout-window):not(.is-popout-modal)
   .titlebar-button-container.mod-right
   .titlebar-button.mod-minimize,
-body.mod-windows
+body.mod-windows:not(.is-popout-window):not(.is-popout-modal)
   .titlebar-button-container.mod-right
   .titlebar-button.mod-maximize,
-body.mod-windows
+body.mod-windows:not(.is-popout-window):not(.is-popout-modal)
   .titlebar-button-container.mod-right
   .titlebar-button.mod-close,
-body.mod-linux
+body.mod-linux:not(.is-popout-window):not(.is-popout-modal)
   .titlebar-button-container.mod-right
   .titlebar-button.mod-minimize,
-body.mod-linux
+body.mod-linux:not(.is-popout-window):not(.is-popout-modal)
   .titlebar-button-container.mod-right
   .titlebar-button.mod-maximize,
-body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close {
+body.mod-linux:not(.is-popout-window):not(.is-popout-modal)
+  .titlebar-button-container.mod-right
+  .titlebar-button.mod-close {
   position: relative;
   top: 9px;
 }
@@ -909,6 +924,16 @@ body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close {
 .workspace-split.mod-right-split {
   margin-left: 6px;
   margin-right: 10px;
+}
+
+/* Keep both side panels below the titlebar/tab strip so the native
+   window controls cannot cover their top buttons. */
+body:not(.is-mobile):not(.is-popout-window):not(.is-popout-modal)
+  .workspace-split.mod-left-split,
+body:not(.is-mobile):not(.is-popout-window):not(.is-popout-modal)
+  .workspace-split.mod-right-split {
+  height: calc(100% - 68px);
+  margin-top: 58px;
 }
 
 .workspace-split.mod-left-split .workspace-tabs,
@@ -1970,20 +1995,24 @@ input[type="checkbox"].task-list-item-checkbox:checked {
 
 /* Obsidian toggle switch */
 .checkbox-container,
-.modal .checkbox-container {
-  width: 40px;
-  height: 22px;
+.checkbox-container.mod-small,
+.modal .checkbox-container,
+.modal .checkbox-container.mod-small {
+  width: 40px !important;
+  height: 22px !important;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   transition: background-color var(--nle-dur) var(--nle-ease);
 }
 
-.checkbox-container:hover {
+.checkbox-container:hover,
+.checkbox-container.mod-small:hover {
   background: rgba(255, 255, 255, 0.16);
 }
 
-.checkbox-container.is-enabled {
+.checkbox-container.is-enabled,
+.checkbox-container.mod-small.is-enabled {
   background: var(--nle-accent);
   box-shadow:
     0 0 0 1px rgba(78, 125, 255, 0.4),
@@ -1991,41 +2020,29 @@ input[type="checkbox"].task-list-item-checkbox:checked {
 }
 
 .checkbox-container::after,
-.modal .checkbox-container::after {
-  width: 16px;
-  height: 16px;
-  top: 3px;
-  left: 3px;
-  margin: 0;
+.checkbox-container.mod-small::after,
+.modal .checkbox-container::after,
+.modal .checkbox-container.mod-small::after {
+  width: 16px !important;
+  height: 16px !important;
+  top: 3px !important;
+  left: 3px !important;
+  margin: 0 !important;
   border-radius: 50%;
   background: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0) !important;
   transition:
     transform var(--nle-dur) var(--nle-ease),
     background-color var(--nle-dur) var(--nle-ease);
 }
 
 .checkbox-container.is-enabled::after,
-.modal .checkbox-container.is-enabled::after {
-  left: 3px;
-  transform: translate3d(18px, 0, 0);
-}
-
-/* Keep the thumb vertically centered while pressed */
-.checkbox-container:where(:not(.is-disabled)):active::after,
-.modal .checkbox-container:where(:not(.is-disabled)):active::after,
-.checkbox-container.is-enabled:where(:not(.is-disabled)):active::after,
-.modal .checkbox-container.is-enabled:where(:not(.is-disabled)):active::after {
-  top: 2px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  margin: 0;
-}
-
-.modal .checkbox-container.is-enabled:where(:not(.is-disabled)):active::after {
-  transform: translate3d(18px, 0, 0);
+.checkbox-container.mod-small.is-enabled::after,
+.modal .checkbox-container.is-enabled::after,
+.modal .checkbox-container.mod-small.is-enabled::after {
+  left: 3px !important;
+  transform: translate3d(18px, 0, 0) !important;
 }
 
 /* Range sliders — the blue timeline-handle treatment */
