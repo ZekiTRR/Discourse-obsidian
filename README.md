@@ -1,9 +1,10 @@
-# Neverlose for Obsidian
+# Discourse для Obsidian
 
-Тёмная тема для Obsidian, собранная по визуальному языку форума
-[forum.neverlose.cc](https://forum.neverlose.cc/) (Discourse). Плюс небольшой
-плагин, который добавляет liquid-glass вкладки, настройку цветов категорий и
-правый блок-таймлайн.
+[English documentation](README.en.md)
+
+Тёмная тема для Obsidian, собранная по визуальному языку Discourse: палитра,
+иконки, боковая панель, типографика и правый блок-таймлайн. Плюс небольшой
+плагин с liquid-glass вкладками и настройкой цветов категорий.
 
 ![Превью темы](preview.png)
 
@@ -11,8 +12,7 @@
 
 ## Возможности
 
-- **Цвета Neverlose**: фон `#0b0b0d`, текст `#dadadb`, акцент `#4e7dff`,
-  оригинальные цвета Discourse-категорий.
+- **Тёмная палитра**: фон `#0b0b0d`, текст `#dadadb`, акцент `#4e7dff`.
 - **Сайдбар как форум**: заголовок `CATEGORIES`, цветные квадраты разделов,
   точки подпапок, документ-иконки заметок.
 - **Liquid-glass вкладки**: активная вкладка — плавающая стеклянная пилюля,
@@ -46,8 +46,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -VaultPath "C:
 ```
 
 Скрипт скачает последний релиз, положит тему в
-`.obsidian/themes/Neverlose`, плагин в
-`.obsidian/plugins/neverlose-theme-settings`, включит плагин в
+`.obsidian/themes/Discourse`, плагин в
+`.obsidian/plugins/discourse-theme-settings`, включит плагин в
 `community-plugins.json` и выставит тему в `appearance.json`.
 
 ### macOS / Linux
@@ -62,42 +62,52 @@ bash <(curl -fsSL https://raw.githubusercontent.com/ZekiTRR/Discourse-obsidian/m
 
 1. Открой [Releases](https://github.com/ZekiTRR/Discourse-obsidian/releases).
 2. Скачай:
-   - `Neverlose.zip`
-   - `neverlose-theme-settings.zip`
+   - `Discourse.zip`
+   - `discourse-theme-settings.zip`
 3. Распакуй:
-   - `Neverlose/` → `<vault>/.obsidian/themes/Neverlose/`
-   - `neverlose-theme-settings/` → `<vault>/.obsidian/plugins/neverlose-theme-settings/`
-4. `Settings → Appearance → Themes → Neverlose`.
-5. `Settings → Community plugins` → включи **Neverlose Theme Settings**.
+   - `Discourse/` → `<vault>/.obsidian/themes/Discourse/`
+   - `discourse-theme-settings/` → `<vault>/.obsidian/plugins/discourse-theme-settings/`
+4. `Settings → Appearance → Themes → Discourse`.
+5. `Settings → Community plugins` → включи **Discourse Theme Settings**.
 6. Перезапусти Obsidian.
 
-> В релизе также есть `Neverlose-obsidian.zip`: внутри папки `themes/` и
+> В релизе также есть `Discourse-obsidian.zip`: внутри папки `themes/` и
 > `plugins/`, которые можно распаковать прямо в `.obsidian/`.
 
 ## Настройка
 
 Открой:
 
-`Settings → Neverlose Theme Settings`
+`Settings → Discourse Theme Settings`
 
 или найди в command palette:
 
-`Neverlose: Открыть настройки Neverlose`
+`Discourse: Открыть настройки Discourse`
 
 Там:
 
-- **Пресет** — `Neverlose / Discord / GitHub / Cyberpunk / Pastel / Nord / Monochrome`.
+- **Пресет** — `Discourse Dark / Discord / GitHub / Cyberpunk / Pastel / Nord / Monochrome`.
 - **Цвет каждой категории** — color picker.
-- **Сбросить цвета** — вернуть оригинальную палитру.
+- **Сбросить цвета** — вернуть палитру по умолчанию.
 - **Liquid glass вкладки** — включить/выключить.
 - **Таймлайн блоков** — включить/выключить.
 - **Место под таймлайн** — резервировать полосу справа или позволить
   таймлайну плавать поверх текста.
 
-Цвета применяются сразу через CSS-переменные:
-`--nle-cat-hub`, `--nle-cat-subjects`, `--nle-cat-projects`,
-`--nle-cat-bac`, `--nle-cat-archive`, `--nle-cat-attachments`,
-`--nle-cat-templates`.
+## Цвета по умолчанию
+
+| Папка | Цвет |
+| --- | --- |
+| `00 - Hub` | `#0088cc` |
+| `01 - Subjects` | `#bf1e2e` |
+| `02 - Projects` | `#e45735` |
+| `03 - Bacalaureat` | `#92278f` |
+| `99 - Archive` | `#25aae2` |
+| `_Attachments` | `#9eb83b` |
+| `_Templates` | `#fbbf24` |
+
+Для незнакомого хранилища работает резервная раскраска по порядку папок
+(`nth-child`), а для этого хранилища цвета закреплены через `data-path`.
 
 ## Структура репозитория
 
@@ -112,15 +122,17 @@ bash <(curl -fsSL https://raw.githubusercontent.com/ZekiTRR/Discourse-obsidian/m
 │   ├── inter-var.woff2
 │   └── JetBrainsMono-Regular.woff2
 ├── plugin/
-│   └── neverlose-theme-settings/
+│   └── discourse-theme-settings/
 │       ├── manifest.json
 │       └── main.js
 ├── install.ps1
 ├── install.sh
+├── README.md                      # русская документация
+├── README.en.md                   # английская документация
 └── .github/workflows/release.yml
 ```
 
-Корень можно склонировать прямо в `.obsidian/themes/Neverlose`, но проще
+Корень можно склонировать прямо в `.obsidian/themes/Discourse`, но проще
 использовать релизные архивы.
 
 ## Требования и совместимость
@@ -134,9 +146,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/ZekiTRR/Discourse-obsidian/m
 - Плагин необходим для пресетов цветов, liquid-glass вкладок и таймлайна.
   Без него тема работает, но эти функции отключены.
 
-## Что перенесено с форума
+## Что перенесено
 
-| Discourse / Neverlose | Obsidian |
+| Discourse UI | Obsidian |
 | --- | --- |
 | Пилл-навигация `Main / Forum / Market / Help` | Пилл-полоса вкладок |
 | `CATEGORIES` с цветными квадратами | Папки с цветными маркерами |
@@ -154,24 +166,5 @@ bash <(curl -fsSL https://raw.githubusercontent.com/ZekiTRR/Discourse-obsidian/m
 
 ## Дисклеймер
 
-Проект вдохновлён оформлением forum.neverlose.cc и не является официальным
-продуктом Neverlose. Все названия и цветовые схемы использованы как
-визуальный референс.
-
----
-
-## English quick install
-
-1. Download `Neverlose.zip` and `neverlose-theme-settings.zip` from
-   [Releases](https://github.com/ZekiTRR/Discourse-obsidian/releases).
-2. Extract them to `.obsidian/themes/Neverlose` and
-   `.obsidian/plugins/neverlose-theme-settings`.
-3. Enable **Neverlose** in `Settings → Appearance → Themes`.
-4. Enable **Neverlose Theme Settings** in `Settings → Community plugins`.
-5. Restart Obsidian.
-
-Windows one-liner (run inside the vault folder):
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "iwr https://raw.githubusercontent.com/ZekiTRR/Discourse-obsidian/main/install.ps1 -UseBasicParsing | iex"
-```
+Проект вдохновлён интерфейсом Discourse и не является официальным продуктом
+Discourse. Все названия и цветовые схемы использованы как визуальный референс.

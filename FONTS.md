@@ -1,26 +1,26 @@
-# Шрифты темы Neverlose
+# Fonts used by the Discourse theme
 
-В папке `fonts/` лежат два шрифта. Оба распространяются по лицензии
+The `fonts/` folder contains two typefaces. Both are distributed under the
 **SIL Open Font License 1.1** (OFL-1.1).
 
 ## Inter Variable
 
-- Файл: `fonts/inter-var.woff2`
-- Семейство: Inter Variable
-- Автор: Rasmus Andersson
-- Лицензия: SIL OFL 1.1
-- Источник: https://github.com/rsms/inter
-- Назначение: интерфейс, текст заметок, заголовки
+- File: `fonts/inter-var.woff2`
+- Family: Inter Variable
+- Author: Rasmus Andersson
+- License: SIL OFL 1.1
+- Source: https://github.com/rsms/inter
+- Used for: interface, note text, headings
 
 ## JetBrains Mono
 
-- Файл: `fonts/JetBrainsMono-Regular.woff2`
-- Семейство: JetBrains Mono
-- Автор: JetBrains
-- Лицензия: SIL OFL 1.1
-- Источник: https://github.com/JetBrains/JetBrainsMono
-- Назначение: код, inline-code, горячие клавиши
+- File: `fonts/JetBrainsMono-Regular.woff2`
+- Family: JetBrains Mono
+- Author: JetBrains
+- License: SIL OFL 1.1
+- Source: https://github.com/JetBrains/JetBrainsMono
+- Used for: code, inline code, keyboard shortcuts
 
-Полный текст лицензии — в файле [OFL.txt](OFL.txt).
-Шрифты можно свободно использовать, распространять и встраивать вместе с
-темой при сохранении уведомления об авторских правах и лицензии.
+The full license text is in [OFL.txt](OFL.txt). The fonts may be used,
+redistributed and embedded with the theme as long as the copyright notice and
+license are preserved.

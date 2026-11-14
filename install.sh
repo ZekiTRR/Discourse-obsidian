@@ -33,7 +33,7 @@ PLUGIN_URL=""
 LATEST_JSON="$TMP/latest.json"
 
 if curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
-    -H "User-Agent: neverlose-installer" \
+    -H "User-Agent: discourse-installer" \
     -H "Accept: application/vnd.github+json" \
     -o "$LATEST_JSON" 2>/dev/null; then
   if command -v python3 >/dev/null 2>&1; then
@@ -44,27 +44,27 @@ import sys
 with open(sys.argv[1], "r", encoding="utf-8") as handle:
     release = json.load(handle)
 assets = {asset.get("name"): asset.get("browser_download_url") for asset in release.get("assets", [])}
-print(f'THEME_URL="{assets.get("Neverlose.zip", "")}"')
-print(f'PLUGIN_URL="{assets.get("neverlose-theme-settings.zip", "")}"')
+print(f'THEME_URL="{assets.get("Discourse.zip", "")}"')
+print(f'PLUGIN_URL="{assets.get("discourse-theme-settings.zip", "")}"')
 PY
 )"
   fi
 fi
 
-THEME_URL="${THEME_URL:-$RELEASE_BASE/Neverlose.zip}"
-PLUGIN_URL="${PLUGIN_URL:-$RELEASE_BASE/neverlose-theme-settings.zip}"
+THEME_URL="${THEME_URL:-$RELEASE_BASE/Discourse.zip}"
+PLUGIN_URL="${PLUGIN_URL:-$RELEASE_BASE/discourse-theme-settings.zip}"
 
-echo "Downloading Neverlose..."
-curl -fsSL "$THEME_URL" -o "$TMP/Neverlose.zip"
-curl -fsSL "$PLUGIN_URL" -o "$TMP/neverlose-theme-settings.zip"
+echo "Downloading Discourse..."
+curl -fsSL "$THEME_URL" -o "$TMP/Discourse.zip"
+curl -fsSL "$PLUGIN_URL" -o "$TMP/discourse-theme-settings.zip"
 
-unzip -q "$TMP/Neverlose.zip" -d "$TMP/theme"
-unzip -q "$TMP/neverlose-theme-settings.zip" -d "$TMP/plugin"
+unzip -q "$TMP/Discourse.zip" -d "$TMP/theme"
+unzip -q "$TMP/discourse-theme-settings.zip" -d "$TMP/plugin"
 
-THEME_SRC="$TMP/theme/Neverlose"
-PLUGIN_SRC="$TMP/plugin/neverlose-theme-settings"
-THEME_DST="$VAULT/.obsidian/themes/Neverlose"
-PLUGIN_DST="$VAULT/.obsidian/plugins/neverlose-theme-settings"
+THEME_SRC="$TMP/theme/Discourse"
+PLUGIN_SRC="$TMP/plugin/discourse-theme-settings"
+THEME_DST="$VAULT/.obsidian/themes/Discourse"
+PLUGIN_DST="$VAULT/.obsidian/plugins/discourse-theme-settings"
 
 [[ -f "$THEME_SRC/theme.css" ]] || { echo "theme.css not found in archive" >&2; exit 1; }
 [[ -f "$PLUGIN_SRC/main.js" ]] || { echo "main.js not found in archive" >&2; exit 1; }
@@ -80,7 +80,7 @@ import os
 import sys
 
 obs = sys.argv[1]
-plugin_id = "neverlose-theme-settings"
+plugin_id = "discourse-theme-settings"
 
 
 def load(path, fallback):
@@ -105,7 +105,7 @@ appearance_path = os.path.join(obs, "appearance.json")
 appearance = load(appearance_path, {})
 if not isinstance(appearance, dict):
     appearance = {}
-appearance["cssTheme"] = "Neverlose"
+appearance["cssTheme"] = "Discourse"
 with open(appearance_path, "w", encoding="utf-8") as handle:
     json.dump(appearance, handle, ensure_ascii=False, indent=2)
     handle.write("\n")
@@ -120,5 +120,5 @@ echo "Theme:  $THEME_DST"
 echo "Plugin: $PLUGIN_DST"
 echo
 echo "Restart Obsidian, then check:"
-echo "  Settings -> Appearance -> Themes -> Neverlose"
-echo "  Settings -> Community plugins -> Neverlose Theme Settings"
+echo "  Settings -> Appearance -> Themes -> Discourse"
+echo "  Settings -> Community plugins -> Discourse Theme Settings"

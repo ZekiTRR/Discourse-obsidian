@@ -1,7 +1,6 @@
-/* ==========================================================================
-   NEVERLOSE — Obsidian theme
-   A dark, forum-native interface inspired by forum.neverlose.cc
-   (Discourse + the "neverlose-docs" theme).
+﻿/* ==========================================================================
+   DISCOURSE — Obsidian theme
+   A dark, forum-native interface inspired by Discourse.
    --------------------------------------------------------------------------
    Sections
    01. Fonts
@@ -29,7 +28,7 @@
 /* 01. Fonts =============================================================== */
 
 @font-face {
-  font-family: "Inter NL";
+  font-family: "Inter Discourse";
   src: url("fonts/inter-var.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
@@ -37,7 +36,7 @@
 }
 
 @font-face {
-  font-family: "JetBrains Mono NL";
+  font-family: "JetBrains Mono Discourse";
   src: url("fonts/JetBrainsMono-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
@@ -47,7 +46,7 @@
 /* 02. Design tokens ======================================================= */
 
 body {
-  /* Core palette — sampled from the Neverlose forum theme */
+  /* Core palette — forum dark palette */
   --nle-bg: #0b0b0d;
   --nle-bg-2: #101013;
   --nle-bg-3: #141417;
@@ -153,10 +152,10 @@ body {
 
   /* Typography */
   --nle-font-sans:
-    "Inter NL", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, sans-serif;
+    "Inter Discourse", "Inter", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
   --nle-font-code:
-    "JetBrains Mono NL", "JetBrains Mono", ui-monospace, "Cascadia Code",
+    "JetBrains Mono Discourse", "JetBrains Mono", ui-monospace, "Cascadia Code",
     Consolas, monospace;
 
   /* Sizes */
@@ -750,7 +749,7 @@ body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close {
   color: var(--nle-fg-solid);
 }
 
-/* Liquid-glass active tab indicator (injected by the Neverlose plugin) */
+/* Liquid-glass active tab indicator (injected by the companion plugin) */
 .workspace-tab-header-container-inner {
   position: relative;
 }

@@ -15,8 +15,8 @@ const CATEGORY_DEFS = [
 ];
 
 const PRESETS = {
-  neverlose: {
-    label: "Neverlose (форум)",
+  discourse: {
+    label: "Discourse Dark",
     colors: {
       hub: "#0088cc",
       subjects: "#bf1e2e",
@@ -102,8 +102,8 @@ const PRESETS = {
 };
 
 const DEFAULT_SETTINGS = {
-  preset: "neverlose",
-  colors: { ...PRESETS.neverlose.colors },
+  preset: "discourse",
+  colors: { ...PRESETS.discourse.colors },
   liquidTabs: true,
   timeline: true,
   timelineGutter: true,
@@ -146,7 +146,7 @@ function parseHeadingsFromText(text) {
   return headings;
 }
 
-class NeverloseSettingTab extends PluginSettingTab {
+class DiscourseSettingTab extends PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
@@ -205,15 +205,15 @@ class NeverloseSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Сбросить цвета")
-      .setDesc("Вернуть оригинальную палитру Neverlose.")
+      .setDesc("Вернуть палитру по умолчанию.")
       .addButton((button) => {
         button
           .setButtonText("Сбросить")
           .setCta()
           .onClick(async () => {
-            this.plugin.settings.preset = "neverlose";
+            this.plugin.settings.preset = "discourse";
             this.plugin.settings.colors = {
-              ...PRESETS.neverlose.colors,
+              ...PRESETS.discourse.colors,
             };
             this.plugin.applyColors();
             await this.plugin.saveSettings();
@@ -264,16 +264,16 @@ class NeverloseSettingTab extends PluginSettingTab {
   }
 }
 
-module.exports = class NeverloseThemeSettings extends Plugin {
+module.exports = class DiscourseThemeSettings extends Plugin {
   async onload() {
     await this.loadSettings();
     this.applyColors();
 
-    this.addSettingTab(new NeverloseSettingTab(this.app, this));
+    this.addSettingTab(new DiscourseSettingTab(this.app, this));
 
     this.addCommand({
       id: "open-settings",
-      name: "Открыть настройки Neverlose",
+      name: "Открыть настройки Discourse",
       callback: () => {
         this.app.setting.open();
         this.app.setting.openTabById?.(this.manifest.id);
@@ -284,8 +284,8 @@ module.exports = class NeverloseThemeSettings extends Plugin {
       id: "reset-category-colors",
       name: "Сбросить цвета категорий",
       callback: async () => {
-        this.settings.preset = "neverlose";
-        this.settings.colors = { ...PRESETS.neverlose.colors };
+        this.settings.preset = "discourse";
+        this.settings.colors = { ...PRESETS.discourse.colors };
         this.applyColors();
         await this.saveSettings();
       },
@@ -380,6 +380,10 @@ module.exports = class NeverloseThemeSettings extends Plugin {
         ...(saved.colors || {}),
       },
     };
+
+    if (!PRESETS[this.settings.preset]) {
+      this.settings.preset = "discourse";
+    }
   }
 
   async saveSettings() {

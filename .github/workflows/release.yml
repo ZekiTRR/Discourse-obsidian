@@ -22,42 +22,42 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf dist
-          mkdir -p dist/Neverlose dist/neverlose-theme-settings
+          mkdir -p dist/Discourse dist/discourse-theme-settings
           mkdir -p dist/combined/themes dist/combined/plugins
 
           cp manifest.json theme.css preview.png settings.png preview.html \
-             README.md LICENSE FONTS.md OFL.txt dist/Neverlose/
-          cp -R fonts dist/Neverlose/fonts
-          cp -R plugin/neverlose-theme-settings/. dist/neverlose-theme-settings/
+             README.md README.en.md LICENSE FONTS.md OFL.txt dist/Discourse/
+          cp -R fonts dist/Discourse/fonts
+          cp -R plugin/discourse-theme-settings/. dist/discourse-theme-settings/
 
-          (cd dist && zip -qr ../Neverlose.zip Neverlose)
-          (cd dist && zip -qr ../neverlose-theme-settings.zip neverlose-theme-settings)
+          (cd dist && zip -qr ../Discourse.zip Discourse)
+          (cd dist && zip -qr ../discourse-theme-settings.zip discourse-theme-settings)
 
-          cp -R dist/Neverlose dist/combined/themes/
-          cp -R dist/neverlose-theme-settings dist/combined/plugins/
+          cp -R dist/Discourse dist/combined/themes/
+          cp -R dist/discourse-theme-settings dist/combined/plugins/
           cat > dist/combined/INSTALL.txt <<'EOF'
-          Neverlose for Obsidian
+          Discourse for Obsidian
           ======================
 
-          1. Copy themes/Neverlose into <vault>/.obsidian/themes/
-          2. Copy plugins/neverlose-theme-settings into <vault>/.obsidian/plugins/
+          1. Copy themes/Discourse into <vault>/.obsidian/themes/
+          2. Copy plugins/discourse-theme-settings into <vault>/.obsidian/plugins/
           3. Restart Obsidian.
-          4. Settings -> Appearance -> Themes -> Neverlose
-          5. Settings -> Community plugins -> enable Neverlose Theme Settings
+          4. Settings -> Appearance -> Themes -> Discourse
+          5. Settings -> Community plugins -> enable Discourse Theme Settings
 
           Or use install.ps1 / install.sh from the release.
           EOF
-          (cd dist/combined && zip -qr ../../Neverlose-obsidian.zip themes plugins INSTALL.txt)
+          (cd dist/combined && zip -qr ../../Discourse-obsidian.zip themes plugins INSTALL.txt)
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.tag }}
-          name: Neverlose for Obsidian ${{ inputs.tag }}
+          name: Discourse for Obsidian ${{ inputs.tag }}
           generate_release_notes: true
           files: |
-            Neverlose.zip
-            neverlose-theme-settings.zip
-            Neverlose-obsidian.zip
+            Discourse.zip
+            discourse-theme-settings.zip
+            Discourse-obsidian.zip
             install.ps1
             install.sh
