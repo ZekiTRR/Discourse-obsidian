@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="ru" class="theme-dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neverlose theme preview</title>
+    <link rel="stylesheet" href="theme.css" />
+    <style>
+      /* Preview-only chrome. The theme itself is in theme.css. */
+      * {
+        box-sizing: border-box;
+      }
+      svg {
+        width: 15px;
+        height: 15px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+      body {
+        font-family: var(--nle-font-sans);
+      }
+      .titlebar {
+        display: flex;
+        align-items: center;
+        height: 58px;
+        -webkit-app-region: drag;
+      }
+      .titlebar .workspace-tab-header-container {
+        display: flex;
+        align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-left: 10px;
+      }
+      .workspace-tab-header-container-inner {
+        display: flex;
+        align-items: center;
+      }
+      .workspace-tab-header-new-tab,
+      .workspace-tab-header-tab-list {
+        display: flex;
+      }
+      .titlebar .window-buttons {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        padding-right: 8px;
+        -webkit-app-region: no-drag;
+      }
+      .titlebar .titlebar-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 30px;
+      }
+      .titlebar .titlebar-button svg {
+        width: 11px;
+        height: 11px;
+        stroke: currentColor;
+        stroke-width: 1.6;
+      }
+      .workspace {
+        display: flex;
+        height: calc(100% - 58px - 26px);
+        min-height: 0;
+        overflow: hidden;
+      }
+      .workspace-ribbon.mod-left {
+        flex: 0 0 48px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 5px;
+      }
+      .workspace-ribbon .sidebar-toggle-button {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-bottom: 8px;
+      }
+      .workspace-ribbon .clickable-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .workspace-ribbon .ribbon-spacer {
+        height: 4px;
+      }
+      .workspace-split {
+        display: flex;
+        min-height: 0;
+      }
+      .workspace-split.mod-left-split {
+        flex: 0 0 260px;
+      }
+      .workspace-split.mod-root {
+        flex: 1 1 auto;
+        min-width: 0;
+        flex-direction: column;
+      }
+      .workspace-split.mod-right-split {
+        flex: 0 0 220px;
+      }
+      .workspace-split .workspace-tabs {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        flex: 1 1 auto;
+        width: 100%;
+      }
+      .workspace-split .workspace-tab-container {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .workspace-leaf {
+        height: 100%;
+        min-height: 0;
+      }
+      .workspace-leaf-content {
+        height: 100%;
+        min-height: 0;
+      }
+      .view-content {
+        height: 100%;
+        overflow: auto;
+      }
+      .workspace-leaf-content[data-type="markdown"] .view-content {
+        overflow: auto;
+      }
+      .view-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 0 0 42px;
+      }
+      .view-header-left,
+      .view-header-right {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
+      .view-header-breadcrumb {
+        padding-left: 6px;
+      }
+      .view-header .clickable-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .view-header svg,
+      .workspace-tab-header svg,
+      .nav-buttons-container svg,
+      .nav-folder-collapse-indicator svg,
+      .tree-item-self svg {
+        width: 15px;
+        height: 15px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .workspace-tab-header {
+        display: flex;
+        align-items: center;
+      }
+      .workspace-tab-header-inner {
+        display: flex;
+        align-items: center;
+      }
+      .workspace-tab-header-inner-icon {
+        display: flex;
+      }
+      .workspace-tab-header-new-tab,
+      .workspace-tab-header-tab-list {
+        display: flex;
+      }
+      .workspace-tab-header-new-tab .clickable-icon,
+      .workspace-tab-header-tab-list .clickable-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav-files-container {
+        height: 100%;
+        overflow: auto;
+      }
+      .tree-item-self {
+        display: flex;
+        align-items: center;
+        position: relative;
+        cursor: default;
+      }
+      .nav-folder-title,
+      .nav-file-title {
+        width: 100%;
+      }
+      .nav-folder-collapse-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 18px;
+      }
+      .nav-folder .nav-folder-children {
+        padding-left: 18px;
+      }
+      .nav-folder.mod-root > .nav-folder-children {
+        padding-left: 0;
+      }
+      .nav-file-title-content,
+      .nav-folder-title-content {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .nav-file-tag {
+        display: none;
+      }
+      .view-content::-webkit-scrollbar {
+        width: 12px;
+      }
+      .markdown-preview-view {
+        min-height: 100%;
+      }
+      .preview-post-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0 18px;
+        color: var(--nle-muted);
+        font-size: 12.5px;
+      }
+      .preview-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #273046, #141722);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #9eb8ff;
+        font-weight: 700;
+        font-size: 13px;
+        flex: 0 0 auto;
+      }
+      .preview-post-meta .who {
+        color: var(--nle-fg-solid);
+        font-weight: 600;
+      }
+      .preview-post-meta .group {
+        color: var(--nle-muted);
+      }
+      .preview-post-meta .dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--nle-control-dim);
+      }
+      .preview-post-meta .spacer {
+        margin-left: auto;
+      }
+      .preview-category {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--nle-muted);
+        font-size: 12.5px;
+        margin-bottom: 10px;
+      }
+      .preview-category::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 2.5px;
+        background: #3ab54a;
+      }
+      .preview-topic-actions {
+        display: flex;
+        gap: 4px;
+        color: var(--nle-control-dim);
+      }
+      .preview-topic-actions svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .outline-tree {
+        padding: 4px 8px;
+      }
+      .outline-tree .tree-item-self {
+        display: flex;
+        align-items: baseline;
+      }
+      .outline-tree .tree-item-children {
+        padding-left: 9px;
+      }
+      .outline-tree .tree-item-inner {
+        display: inline;
+      }
+      .status-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        height: 26px;
+      }
+      .status-bar .status-bar-item {
+        display: inline-flex;
+        align-items: center;
+        height: 20px;
+      }
+      .checklist {
+        list-style: none;
+        padding-left: 0.4em;
+      }
+      .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+      }
+      .checklist input {
+        margin-top: 0.35em;
+        flex: 0 0 auto;
+      }
+      .checklist .done {
+        color: var(--nle-muted);
+        text-decoration: line-through;
+      }
+      .callout-title {
+        display: flex;
+        align-items: center;
+      }
+      .callout-icon {
+        display: flex;
+        align-items: center;
+      }
+      .callout-icon svg {
+        width: 17px;
+        height: 17px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .metadata-properties {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+      }
+      .metadata-pair {
+        display: flex;
+        gap: 7px;
+        align-items: baseline;
+      }
+      .metadata-key {
+        color: var(--nle-muted);
+        font-size: 12px;
+      }
+      .metadata-val {
+        color: var(--nle-control-fg);
+        font-size: 13px;
+      }
+      .preview-scroll-hint {
+        color: var(--nle-faint);
+        font-size: 12px;
+        margin-top: 26px;
+      }
+    </style>
+  </head>
+  <body class="theme-dark is-focused">
+    <div class="app-container">
+      <div class="titlebar">
+        <div class="workspace-tab-header-container">
+          <div class="workspace-tab-header-container-inner nle-liquid-active">
+            <div class="nle-tab-liquid" style="left: 4px; top: 4px; width: 171px; height: 36px; opacity: 1"></div>
+            <div class="workspace-tab-header is-active" data-type="markdown">
+              <div class="workspace-tab-header-inner">
+                <div class="workspace-tab-header-inner-icon">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/><path d="M8 13h8M8 17h5"/></svg>
+                </div>
+                <div class="workspace-tab-header-inner-title">Speed Reading</div>
+              </div>
+            </div>
+            <div class="workspace-tab-header" data-type="markdown">
+              <div class="workspace-tab-header-inner">
+                <div class="workspace-tab-header-inner-icon">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>
+                </div>
+                <div class="workspace-tab-header-inner-title">Математика</div>
+              </div>
+            </div>
+            <div class="workspace-tab-header" data-type="markdown">
+              <div class="workspace-tab-header-inner">
+                <div class="workspace-tab-header-inner-icon">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>
+                </div>
+                <div class="workspace-tab-header-inner-title">План на неделю</div>
+              </div>
+            </div>
+          </div>
+          <div class="workspace-tab-header-new-tab">
+            <div class="clickable-icon" aria-label="New tab">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+          </div>
+          <div class="workspace-tab-header-tab-list">
+            <div class="clickable-icon" aria-label="Tab list">
+              <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="window-buttons">
+          <div class="titlebar-button"><svg viewBox="0 0 12 12"><path d="M2 6h8"/></svg></div>
+          <div class="titlebar-button"><svg viewBox="0 0 12 12"><rect x="2" y="2" width="8" height="8"/></svg></div>
+          <div class="titlebar-button mod-close"><svg viewBox="0 0 12 12"><path d="m2 2 8 8M10 2l-8 8"/></svg></div>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <div class="workspace-ribbon mod-left">
+          <div class="sidebar-toggle-button">
+            <div class="clickable-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </div>
+          </div>
+          <div class="clickable-icon is-active" aria-label="Files">
+            <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg>
+          </div>
+          <div class="clickable-icon" aria-label="Search">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+          </div>
+          <div class="clickable-icon" aria-label="Graph">
+            <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="12" cy="18" r="2"/><path d="m7.7 6.4 8.6.3M7 8l4 8M17 9l-4 7"/></svg>
+          </div>
+          <div class="ribbon-spacer"></div>
+          <div class="clickable-icon" aria-label="Settings">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21h-4v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3v-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5V3h4v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.1v4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          </div>
+        </div>
+
+        <div class="workspace-split mod-left-split">
+          <div class="workspace-tabs">
+            <div class="workspace-tab-header-container">
+              <div class="workspace-tab-header-container-inner">
+                <div class="workspace-tab-header is-active">
+                  <div class="workspace-tab-header-inner">
+                    <div class="workspace-tab-header-inner-icon">
+                      <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg>
+                    </div>
+                    <div class="workspace-tab-header-inner-title">Files</div>
+                  </div>
+                </div>
+                <div class="workspace-tab-header">
+                  <div class="workspace-tab-header-inner">
+                    <div class="workspace-tab-header-inner-icon">
+                      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="workspace-tab-container">
+              <div class="workspace-leaf mod-active">
+                <div class="workspace-leaf-content" data-type="file-explorer">
+                  <div class="view-content">
+                    <div class="nav-files-container">
+                      <div class="tree-item nav-folder mod-root">
+                        <div class="nav-folder-title tree-item-self">
+                          <div class="nav-folder-title-content">Learning</div>
+                        </div>
+                        <div class="nav-folder-children">
+                          <div class="tree-item nav-folder">
+                            <div class="nav-folder-title tree-item-self" data-path="00 - Hub">
+                              <div class="nav-folder-collapse-indicator">
+                                <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                              <div class="nav-folder-title-content">00 - Hub</div>
+                            </div>
+                            <div class="nav-folder-children">
+                              <div class="tree-item nav-file">
+                                <div class="nav-file-title tree-item-self">
+                                  <div class="nav-file-title-content">Home.md</div>
+                                </div>
+                              </div>
+                              <div class="tree-item nav-file">
+                                <div class="nav-file-title tree-item-self">
+                                  <div class="nav-file-title-content">Dashboard.md</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="tree-item nav-folder">
+                            <div class="nav-folder-title tree-item-self" data-path="01 - Subjects">
+                              <div class="nav-folder-collapse-indicator">
+                                <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                              <div class="nav-folder-title-content">01 - Subjects</div>
+                            </div>
+                            <div class="nav-folder-children">
+                              <div class="tree-item nav-folder">
+                                <div class="nav-folder-title tree-item-self">
+                                  <div class="nav-folder-collapse-indicator">
+                                    <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                                  </div>
+                                  <div class="nav-folder-title-content">Математика</div>
+                                </div>
+                                <div class="nav-folder-children">
+                                  <div class="tree-item nav-file">
+                                    <div class="nav-file-title tree-item-self">
+                                      <div class="nav-file-title-content">Тригонометрия.md</div>
+                                    </div>
+                                  </div>
+                                  <div class="tree-item nav-file">
+                                    <div class="nav-file-title tree-item-self is-active">
+                                      <div class="nav-file-title-content">Производные.md</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="tree-item nav-folder">
+                                <div class="nav-folder-title tree-item-self">
+                                  <div class="nav-folder-collapse-indicator">
+                                    <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                                  </div>
+                                  <div class="nav-folder-title-content">Русский</div>
+                                </div>
+                              </div>
+                              <div class="tree-item nav-folder">
+                                <div class="nav-folder-title tree-item-self">
+                                  <div class="nav-folder-collapse-indicator">
+                                    <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                                  </div>
+                                  <div class="nav-folder-title-content">Английский</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="tree-item nav-folder">
+                            <div class="nav-folder-title tree-item-self" data-path="02 - Projects">
+                              <div class="nav-folder-collapse-indicator">
+                                <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                              <div class="nav-folder-title-content">02 - Projects</div>
+                            </div>
+                          </div>
+
+                          <div class="tree-item nav-folder">
+                            <div class="nav-folder-title tree-item-self" data-path="03 - Bacalaureat">
+                              <div class="nav-folder-collapse-indicator">
+                                <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                              <div class="nav-folder-title-content">03 - Bacalaureat</div>
+                            </div>
+                          </div>
+
+                          <div class="tree-item nav-folder">
+                            <div class="nav-folder-title tree-item-self" data-path="99 - Archive">
+                              <div class="nav-folder-collapse-indicator">
+                                <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                              <div class="nav-folder-title-content">99 - Archive</div>
+                            </div>
+                          </div>
+
+                          <div class="tree-item nav-folder">
+                            <div class="nav-folder-title tree-item-self" data-path="_Attachments">
+                              <div class="nav-folder-collapse-indicator">
+                                <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                              <div class="nav-folder-title-content">_Attachments</div>
+                            </div>
+                          </div>
+
+                          <div class="tree-item nav-folder">
+                            <div class="nav-folder-title tree-item-self" data-path="_Templates">
+                              <div class="nav-folder-collapse-indicator">
+                                <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                              <div class="nav-folder-title-content">_Templates</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="workspace-split mod-root">
+          <div class="workspace-tabs">
+            <div class="workspace-tab-container">
+              <div class="workspace-leaf mod-active">
+                <div class="workspace-leaf-content" data-type="markdown">
+                  <div class="view-header">
+                    <div class="view-header-left">
+                      <div class="clickable-icon">
+                        <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+                      </div>
+                      <div class="view-header-breadcrumb">02 - Projects / Speed Reading</div>
+                    </div>
+                    <div class="view-header-right">
+                      <div class="clickable-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>
+                      </div>
+                      <div class="clickable-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="view-content">
+                    <div class="markdown-reading-view">
+                      <div class="markdown-preview-view is-readable-line-width">
+                        <div class="markdown-preview-sizer markdown-rendered">
+                          <div class="inline-title">✅ Speed Reading — 12 Week Protocol</div>
+                          <div class="preview-category">02 - Projects</div>
+
+                          <div class="preview-post-meta">
+                            <div class="preview-avatar">SR</div>
+                            <div>
+                              <div class="who">Neverlose <span class="group">· Obsidian user</span></div>
+                              <div>12 недель · 24 заметки · обновлено сегодня</div>
+                            </div>
+                            <div class="spacer"></div>
+                            <div class="preview-topic-actions">
+                              <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                              <svg viewBox="0 0 24 24"><path d="m14 4 6 6-9.5 9.5L4 21l1.5-6.5z"/></svg>
+                              <svg viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 16V3M7 8l5-5 5 5"/></svg>
+                            </div>
+                          </div>
+
+                          <div class="metadata-container">
+                            <div class="metadata-properties">
+                              <div class="metadata-pair"><span class="metadata-key">status</span><span class="metadata-val">active</span></div>
+                              <div class="metadata-pair"><span class="metadata-key">week</span><span class="metadata-val">1 / 12</span></div>
+                              <div class="metadata-pair"><span class="metadata-key">area</span><span class="metadata-val">learning</span></div>
+                              <div class="metadata-pair"><span class="metadata-key">tags</span><span class="metadata-val"><span class="tag">#speed-reading</span> <span class="tag">#protocol</span></span></div>
+                            </div>
+                          </div>
+
+                          <h1>Неделя 1 — фундамент</h1>
+                          <p>
+                            Это стартовая заметка протокола. Здесь собраны упражнения,
+                            таймеры и ссылки на материалы. Главная цель первой недели —
+                            убрать внутреннюю артикуляцию и привыкнуть к движению глаз
+                            по странице без возвратов.
+                          </p>
+
+                          <blockquote>
+                            <p>
+                              Читай не слова, а смысловые блоки. Если поймал себя на
+                              проговаривании — вернись к ритму и продолжай с той же
+                              скоростью.
+                            </p>
+                          </blockquote>
+
+                          <details>
+                            <summary>План на неделю (нажми, чтобы раскрыть)</summary>
+                            <ul>
+                              <li>День 1–2: диагностика скорости и понимания.</li>
+                              <li>День 3–4: упражнения на периферийное зрение.</li>
+                              <li>День 5–7: чтение с метрономом, 2 подхода по 10 минут.</li>
+                            </ul>
+                          </details>
+
+                          <details open>
+                            <summary>Метрики и нормативы</summary>
+                            <div class="md-table">
+                              <table>
+                                <thead>
+                                  <tr><th>Метрика</th><th>Старт</th><th>Цель</th></tr>
+                                </thead>
+                                <tbody>
+                                  <tr><td>Скорость</td><td>220 сл/мин</td><td>420 сл/мин</td></tr>
+                                  <tr><td>Понимание</td><td>70%</td><td>85%</td></tr>
+                                  <tr><td>Возвраты</td><td>12 / стр.</td><td>≤ 3 / стр.</td></tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </details>
+
+                          <h2>Чек-лист дня</h2>
+                          <ul class="checklist">
+                            <li><input type="checkbox" class="task-list-item-checkbox" checked /><span class="done">Утренний блок: 10 минут чтения</span></li>
+                            <li><input type="checkbox" class="task-list-item-checkbox" checked /><span class="done">Записать скорость в дневник</span></li>
+                            <li><input type="checkbox" class="task-list-item-checkbox" /><span>Вечерний блок: 15 минут без проговаривания</span></li>
+                          </ul>
+
+                          <div class="callout" data-callout="tip" style="--callout-color: 78, 125, 255">
+                            <div class="callout-title">
+                              <div class="callout-icon">
+                                <svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/></svg>
+                              </div>
+                              <div class="callout-title-inner">Совет</div>
+                            </div>
+                            <div class="callout-content">
+                              <p>
+                                Ставь таймер на 10 минут и читай только один раздел.
+                                Короткие подходы дают больше, чем час вязкого чтения.
+                                Подробнее — в <a href="#">протоколе тренировок</a>.
+                              </p>
+                            </div>
+                          </div>
+
+                          <p>
+                            Связанные заметки: <a href="#">Дневник скорости</a>,
+                            <a href="#">Упражнения на фиксацию</a>,
+                            <a href="#">Неделя 2</a>. Если ссылка не создана,
+                            она останется приглушённой — как неразрешённая ссылка в
+                            Obsidian.
+                          </p>
+                          <p class="preview-scroll-hint">Прокрути заметку — справа работает таймлайн-скроллбар.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="workspace-split mod-right-split">
+          <div class="workspace-tabs">
+            <div class="workspace-tab-header-container">
+              <div class="workspace-tab-header-container-inner">
+                <div class="workspace-tab-header is-active">
+                  <div class="workspace-tab-header-inner">
+                    <div class="workspace-tab-header-inner-title">Outline</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="workspace-tab-container">
+              <div class="workspace-leaf">
+                <div class="workspace-leaf-content" data-type="outline">
+                  <div class="view-content">
+                    <div class="outline">
+                      <div class="tree-item">
+                        <div class="tree-item-self is-active">
+                          <div class="tree-item-inner">Неделя 1 — фундамент</div>
+                        </div>
+                        <div class="tree-item-children">
+                          <div class="tree-item">
+                            <div class="tree-item-self">
+                              <div class="tree-item-inner">Чек-лист дня</div>
+                            </div>
+                          </div>
+                          <div class="tree-item">
+                            <div class="tree-item-self">
+                              <div class="tree-item-inner">Что дальше</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-bar-item">1 248 слов</div>
+        <div class="status-bar-item">6 минут чтения</div>
+        <div class="status-bar-item">Neverlose</div>
+      </div>
+    </div>
+  </body>
+</html>

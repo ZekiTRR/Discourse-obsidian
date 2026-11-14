@@ -1,0 +1,2971 @@
+/* ==========================================================================
+   NEVERLOSE — Obsidian theme
+   A dark, forum-native interface inspired by forum.neverlose.cc
+   (Discourse + the "neverlose-docs" theme).
+   --------------------------------------------------------------------------
+   Sections
+   01. Fonts
+   02. Design tokens
+   03. Obsidian variable mapping
+   04. Base / workspace
+   05. Titlebar, tabs, ribbon
+   06. Side panels (forum-style categories)
+   07. File explorer
+   08. Editor & reading view
+   09. Typography
+   10. Links, tags, highlights
+   11. Quotes, callouts, details
+   12. Tables, code, math
+   13. Checkboxes, toggles, sliders
+   14. Scrollbars (topic timeline)
+   15. Menus, prompts, modals, settings
+   16. Status bar
+   17. Graph, canvas, misc plugins
+   18. Mobile & print
+   ========================================================================== */
+
+@charset "UTF-8";
+
+/* 01. Fonts =============================================================== */
+
+@font-face {
+  font-family: "Inter NL";
+  src: url("fonts/inter-var.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono NL";
+  src: url("fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 02. Design tokens ======================================================= */
+
+body {
+  /* Core palette — sampled from the Neverlose forum theme */
+  --nle-bg: #0b0b0d;
+  --nle-bg-2: #101013;
+  --nle-bg-3: #141417;
+  --nle-fg: rgba(255, 255, 255, 0.85);
+  --nle-fg-solid: #f2f2f4;
+  --nle-prose: color-mix(in srgb, var(--nle-fg) 80%, var(--nle-bg));
+  --nle-muted: rgba(150, 150, 150, 0.8);
+  --nle-faint: rgba(255, 255, 255, 0.35);
+  --nle-control-fg: rgba(255, 255, 255, 0.85);
+  --nle-control-dim: rgba(255, 255, 255, 0.5);
+  --nle-nav-row-fg: color-mix(
+    in srgb,
+    rgba(255, 255, 255, 0.72) 62%,
+    rgba(150, 150, 150, 0.8)
+  );
+  --nle-nav-section: rgba(255, 255, 255, 0.5);
+
+  /* Brand / accent */
+  --nle-accent: #4e7dff;
+  --nle-accent-hover: #6b92ff;
+  --nle-accent-press: #4471ef;
+  --nle-accent-soft: rgba(78, 125, 255, 0.14);
+  --nle-ring: rgba(78, 125, 255, 0.6);
+
+  /* Forum category colors (Discourse badge colors, kept exact) */
+  --nle-cat-news: #bf1e2e;
+  --nle-cat-media: #25aae2;
+  --nle-cat-cs2: #e45735;
+  --nle-cat-csgo: #0088cc;
+  --nle-cat-offtop: #92278f;
+  --nle-cat-green: #9eb83b;
+  --nle-cat-gold: #fbbf24;
+  --nle-cat-resell: #3ab54a;
+
+  /* Semantic category slots — the settings plugin writes these on <body> */
+  --nle-cat-hub: var(--nle-cat-csgo);
+  --nle-cat-subjects: var(--nle-cat-news);
+  --nle-cat-projects: var(--nle-cat-cs2);
+  --nle-cat-bac: var(--nle-cat-offtop);
+  --nle-cat-archive: var(--nle-cat-media);
+  --nle-cat-attachments: var(--nle-cat-green);
+  --nle-cat-templates: var(--nle-cat-gold);
+
+  /* Semantic colors */
+  --nle-success: #1f9d6b;
+  --nle-green: #6ee7b7;
+  --nle-yellow: #fbbf24;
+  --nle-orange: #fb923c;
+  --nle-red: #fca5a5;
+  --nle-purple: #c4b5fd;
+  --nle-blue: #9eb8ff;
+
+  /* Surfaces, borders, rings */
+  --nle-border: rgba(255, 255, 255, 0.12);
+  --nle-border-subtle: rgba(255, 255, 255, 0.1);
+  --nle-divider: rgba(255, 255, 255, 0.06);
+  --nle-hairline: rgba(255, 255, 255, 0.055);
+  --nle-surface-1: rgba(255, 255, 255, 0.045);
+  --nle-surface-2: rgba(255, 255, 255, 0.075);
+  --nle-accent-fill: rgba(80, 80, 80, 0.25);
+  --nle-pill-bg: rgba(255, 255, 255, 0.055);
+  --nle-pill-hover: rgba(255, 255, 255, 0.045);
+  --nle-pill-press: rgba(255, 255, 255, 0.075);
+  --nle-tab-sel: rgba(255, 255, 255, 0.1);
+  --nle-nav-active-bg: rgba(255, 255, 255, 0.08);
+  --nle-search-bg: rgba(80, 80, 80, 0.18);
+  --nle-scrim: rgba(5, 5, 7, 0.55);
+
+  /* Panels */
+  --nle-panel-bg:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.015)
+    ),
+    rgba(15, 15, 17, 0.72);
+  --nle-panel-ring: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+  --nle-panel-shadow: 0 1px 3px rgba(10, 10, 10, 0.35);
+  --nle-pill-ring: inset 0 0 0 1px rgba(255, 255, 255, 0.065);
+  --nle-pill-shadow: 0 8px 40px rgba(10, 10, 10, 0.4);
+  --nle-popover: #141417;
+  --nle-popover-glass: rgba(10, 10, 12, 0.85);
+  --nle-popover-border: rgba(255, 255, 255, 0.1);
+  --nle-card-bg: rgba(0, 0, 0, 0.35);
+  --nle-card-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.055), 0 8px 40px rgba(10, 10, 10, 0.4);
+
+  /* Radius scale */
+  --nle-radius-xs: 4px;
+  --nle-radius-sm: 6px;
+  --nle-radius-md: 8px;
+  --nle-radius-lg: 10px;
+  --nle-radius-card: 12px;
+  --nle-radius-xl: 14px;
+  --nle-radius-panel: 16px;
+  --nle-radius-dialog: 18px;
+  --nle-radius-pill: 9999px;
+
+  /* Motion */
+  --nle-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --nle-fast: 130ms;
+  --nle-dur: 200ms;
+
+  /* Typography */
+  --nle-font-sans:
+    "Inter NL", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+  --nle-font-code:
+    "JetBrains Mono NL", "JetBrains Mono", ui-monospace, "Cascadia Code",
+    Consolas, monospace;
+
+  /* Sizes */
+  --nle-content-width: 780px;
+  --nle-editor-pad: 48px;
+  --nle-icon-sm: 16px;
+  --nle-avatar-sm: 24px;
+}
+
+/* 03. Obsidian variable mapping ========================================== */
+
+body.theme-dark,
+body.theme-light {
+  color-scheme: dark;
+
+  /* Typography */
+  --font-interface-theme: var(--nle-font-sans);
+  --font-text-theme: var(--nle-font-sans);
+  --font-editor-theme: var(--nle-font-sans);
+  --font-monospace-theme: var(--nle-font-code);
+  --font-interface:
+    var(--font-interface-override, var(--nle-font-sans)),
+    var(--font-interface-theme, var(--nle-font-sans)), var(--nle-font-sans);
+  --font-text:
+    var(--font-text-override, var(--nle-font-sans)),
+    var(--font-text-theme, var(--nle-font-sans)), var(--nle-font-sans);
+  --font-monospace:
+    var(--font-monospace-override, var(--nle-font-code)),
+    var(--font-monospace-theme, var(--nle-font-code)), var(--nle-font-code);
+
+  --font-ui-smaller: 12px;
+  --font-ui-small: 13px;
+  --font-ui-medium: 14px;
+  --font-ui-large: 16px;
+
+  --line-height-normal: 1.65;
+  --line-height-tight: 1.3;
+  --line-height-heading: 1.2;
+  --p-spacing: 0.9rem;
+
+  --h1-size: 2rem;
+  --h2-size: 1.375rem;
+  --h3-size: 1.1875rem;
+  --h4-size: 1.0625rem;
+  --h5-size: 1rem;
+  --h6-size: 0.875rem;
+  --h1-weight: 650;
+  --h2-weight: 650;
+  --h3-weight: 600;
+  --h4-weight: 600;
+  --h5-weight: 600;
+  --h6-weight: 600;
+  --h1-color: var(--nle-fg-solid);
+  --h2-color: var(--nle-fg-solid);
+  --h3-color: var(--nle-fg-solid);
+  --h4-color: var(--nle-fg-solid);
+  --h5-color: var(--nle-fg-solid);
+  --h6-color: var(--nle-muted);
+  --heading-spacing: 1.35em;
+  --inline-title-size: 2rem;
+  --inline-title-weight: 650;
+  --inline-title-color: var(--nle-fg-solid);
+  --bold-color: var(--nle-fg-solid);
+  --bold-weight: 650;
+  --italic-color: var(--nle-fg);
+  --strikethrough-color: var(--nle-muted);
+
+  /* Surfaces */
+  --background-primary: var(--nle-bg);
+  --background-primary-alt: var(--nle-bg-2);
+  --background-secondary: transparent;
+  --background-secondary-alt: transparent;
+  --background-modifier-border: var(--nle-border-subtle);
+  --background-modifier-border-hover: var(--nle-border);
+  --background-modifier-border-focus: var(--nle-ring);
+  --background-modifier-hover: var(--nle-surface-1);
+  --background-modifier-active-hover: var(--nle-surface-2);
+  --background-modifier-form-field: var(--nle-search-bg);
+  --background-modifier-form-field-highlighted: var(--nle-surface-2);
+  --background-modifier-box-shadow: rgba(0, 0, 0, 0.5);
+  --background-modifier-success: rgba(31, 157, 107, 0.18);
+  --background-modifier-error: rgba(252, 165, 165, 0.12);
+  --background-modifier-error-hover: rgba(252, 165, 165, 0.18);
+  --background-modifier-cover: var(--nle-scrim);
+  --background-modifier-invalid: rgba(252, 165, 165, 0.12);
+  --workspace-background-translucent: rgba(11, 11, 13, 0.86);
+
+  /* Text */
+  --text-normal: var(--nle-fg);
+  --text-muted: var(--nle-muted);
+  --text-faint: var(--nle-faint);
+  --text-on-accent: #ffffff;
+  --text-on-accent-inverted: #0b0b0d;
+  --text-success: var(--nle-green);
+  --text-warning: var(--nle-yellow);
+  --text-error: var(--nle-red);
+  --text-accent: var(--nle-accent);
+  --text-accent-hover: var(--nle-accent-hover);
+  --text-selection: rgba(78, 125, 255, 0.25);
+  --text-highlight-bg: rgba(251, 191, 36, 0.22);
+  --text-highlight-bg-active: rgba(251, 191, 36, 0.35);
+
+  /* Accent */
+  --accent-h: 224;
+  --accent-s: 100%;
+  --accent-l: 65%;
+  --color-accent: var(--nle-accent);
+  --color-accent-1: var(--nle-accent-hover);
+  --color-accent-2: var(--nle-accent-press);
+  --interactive-normal: var(--nle-pill-bg);
+  --interactive-hover: var(--nle-pill-hover);
+  --interactive-accent: var(--nle-accent);
+  --interactive-accent-hover: var(--nle-accent-hover);
+  --interactive-accent-rgb: 78, 125, 255;
+  --interactive-accent-hsl: 224, 100%, 65%;
+
+  /* Standard palette */
+  --color-red: #fca5a5;
+  --color-red-rgb: 252, 165, 165;
+  --color-orange: #fb923c;
+  --color-orange-rgb: 251, 146, 60;
+  --color-yellow: #fbbf24;
+  --color-yellow-rgb: 251, 191, 36;
+  --color-green: #6ee7b7;
+  --color-green-rgb: 110, 231, 183;
+  --color-cyan: #67e8f9;
+  --color-cyan-rgb: 103, 232, 249;
+  --color-blue: #9eb8ff;
+  --color-blue-rgb: 158, 184, 255;
+  --color-purple: #c4b5fd;
+  --color-purple-rgb: 196, 181, 253;
+  --color-pink: #f9a8d4;
+  --color-pink-rgb: 249, 168, 212;
+
+  /* Links */
+  --link-color: var(--nle-accent);
+  --link-color-hover: var(--nle-accent-hover);
+  --link-decoration: none;
+  --link-decoration-hover: underline;
+  --link-decoration-thickness: 1px;
+  --link-external-color: var(--nle-accent);
+  --link-external-color-hover: var(--nle-accent-hover);
+  --link-external-decoration: none;
+  --link-external-decoration-hover: underline;
+  --link-unresolved-color: rgba(255, 255, 255, 0.55);
+  --link-unresolved-opacity: 1;
+  --link-unresolved-decoration-color: rgba(255, 255, 255, 0.2);
+
+  /* Tags */
+  --tag-background: var(--nle-surface-1);
+  --tag-background-hover: var(--nle-surface-2);
+  --tag-color: var(--nle-control-fg);
+  --tag-color-hover: var(--nle-fg-solid);
+  --tag-border-color: var(--nle-border-subtle);
+  --tag-border-color-hover: var(--nle-border);
+  --tag-border-width: 1px;
+  --tag-radius: 8px;
+  --tag-padding-x: 8px;
+  --tag-padding-y: 1px;
+  --tag-size: 12px;
+  --tag-weight: 500;
+
+  /* Lists */
+  --list-marker-color: rgba(255, 255, 255, 0.35);
+  --list-marker-color-hover: var(--nle-control-fg);
+  --list-marker-color-collapsed: var(--nle-control-dim);
+  --list-bullet-border: 1px solid rgba(255, 255, 255, 0.35);
+  --list-bullet-size: 0.42em;
+  --list-indent: 1.6em;
+
+  /* Rules */
+  --hr-color: var(--nle-divider);
+  --hr-thickness: 1px;
+
+  /* Quotes */
+  --blockquote-border-thickness: 3px;
+  --blockquote-border-color: var(--nle-border);
+  --blockquote-font-style: normal;
+  --blockquote-color: var(--nle-prose);
+  --blockquote-background-color: var(--nle-surface-1);
+
+  /* Code */
+  --code-background: #101013;
+  --code-normal: #e6edf3;
+  --code-comment: #8b949e;
+  --code-function: #d2a8ff;
+  --code-important: #ff7b72;
+  --code-keyword: #ff7b72;
+  --code-operator: #c9d1d9;
+  --code-property: #79c0ff;
+  --code-punctuation: #c9d1d9;
+  --code-string: #a5d6ff;
+  --code-tag: #7ee787;
+  --code-value: #79c0ff;
+
+  /* Tables */
+  --table-background: transparent;
+  --table-border-width: 0px;
+  --table-border-color: var(--nle-divider);
+  --table-white-space: normal;
+  --table-header-background: var(--nle-surface-1);
+  --table-header-background-hover: var(--nle-surface-2);
+  --table-header-border-width: 0px;
+  --table-header-border-color: var(--nle-divider);
+  --table-header-font: var(--nle-font-sans);
+  --table-header-size: 0.875em;
+  --table-header-weight: 550;
+  --table-header-color: var(--nle-fg-solid);
+  --table-header-text-align: left;
+  --table-row-background-hover: var(--nle-surface-1);
+  --table-row-alt-background: transparent;
+  --table-row-alt-background-hover: var(--nle-surface-1);
+  --table-column-alt-background: transparent;
+  --table-column-first-border-width: 0px;
+  --table-column-last-border-width: 0px;
+  --table-row-last-border-width: 0px;
+
+  /* Checkboxes */
+  --checkbox-color: var(--nle-accent);
+  --checkbox-color-hover: var(--nle-accent-hover);
+  --checkbox-border-color: rgba(255, 255, 255, 0.25);
+  --checkbox-border-color-hover: var(--nle-border);
+  --checkbox-marker-color: #ffffff;
+  --checkbox-radius: 4px;
+  --checkbox-size: 16px;
+  --checkbox-margin-inline-start: 0.6em;
+
+  /* Toggles */
+  --toggle-radius: 999px;
+  --toggle-thumb-radius: 999px;
+  --toggle-width: 40px;
+  --toggle-height: 22px;
+  --toggle-thumb-width: 16px;
+  --toggle-thumb-height: 16px;
+  --toggle-border-width: 2px;
+  --toggle-thumb-color: #ffffff;
+  --toggle-s-width: 32px;
+  --toggle-s-height: 18px;
+  --toggle-s-thumb-width: 12px;
+  --toggle-s-thumb-height: 12px;
+
+  /* Inputs */
+  --input-height: 36px;
+  --input-radius: 10px;
+  --input-border-width: 1px;
+  --input-border-color: transparent;
+  --input-background: var(--nle-search-bg);
+  --input-shadow: 0 0 0 1px transparent;
+  --input-shadow-hover: 0 0 0 1px var(--nle-border);
+  --input-font-size: 14px;
+  --input-font-weight: 450;
+
+  /* Clickable icons */
+  --clickable-icon-radius: 9px;
+  --icon-size: 18px;
+  --icon-stroke: 1.75px;
+  --icon-color: var(--nle-control-dim);
+  --icon-color-hover: var(--nle-fg-solid);
+  --icon-color-active: var(--nle-accent);
+  --icon-color-focused: var(--nle-fg-solid);
+
+  /* Tabs */
+  --tab-radius-active: 999px;
+  --tab-radius: 999px;
+  --tab-outline-width: 0px;
+  --tab-outline-color: transparent;
+  --tab-divider-color: transparent;
+  --tab-container-background: transparent;
+  --tab-background: transparent;
+  --tab-background-active: var(--nle-tab-sel);
+  --tab-font-size: 13.5px;
+  --tab-text-color: var(--nle-control-fg);
+  --tab-text-color-active: var(--nle-fg-solid);
+  --tab-text-color-focused: var(--nle-control-fg);
+  --tab-text-color-focused-active: var(--nle-fg-solid);
+  --tab-text-color-focused-active-current: var(--nle-fg-solid);
+  --tab-text-weight: 450;
+
+  /* Titlebar / ribbon / status bar */
+  --titlebar-background: transparent;
+  --titlebar-background-focused: transparent;
+  --titlebar-text-color: var(--nle-muted);
+  --titlebar-text-color-focused: var(--nle-fg);
+  --titlebar-text-weight: 500;
+  --ribbon-background: transparent;
+  --ribbon-background-collapsed: transparent;
+  --ribbon-width: 48px;
+  --status-bar-background: transparent;
+  --status-bar-border-color: var(--nle-divider);
+  --status-bar-text-color: var(--nle-muted);
+  --status-bar-radius: 0px;
+  --divider-color: transparent;
+  --divider-color-hover: var(--nle-border);
+
+  /* Navigation tree */
+  --nav-item-size: 14px;
+  --nav-item-color: var(--nle-nav-row-fg);
+  --nav-item-color-hover: var(--nle-fg-solid);
+  --nav-item-color-active: var(--nle-fg-solid);
+  --nav-item-background-hover: var(--nle-tab-sel);
+  --nav-item-background-active: var(--nle-nav-active-bg);
+  --nav-item-color-highlighted: var(--nle-accent);
+  --nav-collapse-icon-color: var(--nle-control-dim);
+  --nav-collapse-icon-color-collapsed: var(--nle-control-dim);
+  --nav-indentation-guide-color: rgba(255, 255, 255, 0.06);
+  --nav-indentation-guide-width: 1px;
+  --vault-name-color: var(--nle-fg-solid);
+  --vault-name-font-size: 13px;
+  --vault-name-font-weight: 550;
+
+  /* Menus, prompts, modals */
+  --menu-background: var(--nle-popover-glass);
+  --menu-border-color: var(--nle-popover-border);
+  --menu-border-width: 1px;
+  --menu-radius: 14px;
+  --menu-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
+  --prompt-background: var(--nle-popover-glass);
+  --prompt-border-color: var(--nle-popover-border);
+  --prompt-border-width: 1px;
+  --prompt-input-height: 42px;
+  --prompt-radius: 18px;
+  --modal-background: var(--nle-popover-glass);
+  --modal-border-color: var(--nle-popover-border);
+  --modal-border-width: 1px;
+  --modal-radius: 18px;
+  --modal-shadow: 0 8px 60px rgba(0, 0, 0, 0.6);
+  --modal-title-size: 17px;
+  --modal-title-weight: 650;
+  --modal-title-color: var(--nle-fg-solid);
+
+  /* Misc */
+  --scrollbar-bg: transparent;
+  --scrollbar-thumb-bg: rgba(78, 125, 255, 0.28);
+  --scrollbar-active-thumb-bg: rgba(78, 125, 255, 0.65);
+  --file-line-width: var(--nle-content-width);
+  --file-margins: 24px var(--nle-editor-pad) 96px;
+  --radius-s: 6px;
+  --radius-m: 8px;
+  --radius-l: 12px;
+  --radius-xl: 16px;
+  --radius-xs: 4px;
+  --radius-xxs: 2px;
+  --input-border-radius: 10px;
+  --button-radius: 999px;
+  --pill-radius: 999px;
+  --embed-background: var(--nle-surface-1);
+  --embed-border-radius: 12px;
+  --embed-border-start: 3px solid var(--nle-border);
+  --canvas-background: var(--nle-bg);
+  --canvas-card-label-color: var(--nle-muted);
+}
+
+/* 04. Base / workspace =================================================== */
+
+html,
+body {
+  background-color: var(--nle-bg);
+}
+
+body {
+  font-family: var(--nle-font-sans);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--nle-fg);
+  background: var(--nle-bg);
+  font-feature-settings:
+    "liga" 1,
+    "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+  background:
+    radial-gradient(
+      1100px 520px at 50% -12%,
+      rgba(78, 125, 255, 0.055),
+      transparent 62%
+    ),
+    var(--nle-bg);
+}
+
+.workspace,
+.workspace-split,
+.workspace-tabs,
+.workspace-tab-container,
+.workspace-leaf,
+.workspace-leaf-content,
+.view-content {
+  background-color: transparent;
+}
+
+.workspace {
+  background: transparent;
+}
+
+.workspace-split.mod-root {
+  background: transparent;
+}
+
+::selection {
+  background: rgba(78, 125, 255, 0.28);
+  color: inherit;
+}
+
+/* Focus rings — thin, blue, forum-like. Keep them off the editor surface. */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.clickable-icon:focus-visible,
+.workspace-tab-header:focus-visible,
+.nav-file-title:focus-visible,
+.nav-folder-title:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--nle-ring);
+}
+
+/* 05. Titlebar, tabs, ribbon ============================================= */
+
+.titlebar {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  height: auto;
+  padding: 0;
+}
+
+.titlebar-button-container {
+  background: transparent;
+}
+
+.titlebar-button {
+  border-radius: 8px;
+  color: var(--nle-muted);
+  transition:
+    background-color var(--nle-fast) ease-out,
+    color var(--nle-fast) ease-out;
+}
+
+.titlebar-button:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg-solid);
+}
+
+.titlebar-button.mod-close:hover {
+  background: #e5484d;
+  color: #ffffff;
+}
+
+/* Windows/Linux window controls: center them with the 58px tab strip
+   instead of the shorter native titlebar row. */
+body.mod-windows
+  .titlebar-button-container.mod-right
+  .titlebar-button.mod-minimize,
+body.mod-windows
+  .titlebar-button-container.mod-right
+  .titlebar-button.mod-maximize,
+body.mod-windows
+  .titlebar-button-container.mod-right
+  .titlebar-button.mod-close,
+body.mod-linux
+  .titlebar-button-container.mod-right
+  .titlebar-button.mod-minimize,
+body.mod-linux
+  .titlebar-button-container.mod-right
+  .titlebar-button.mod-maximize,
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close {
+  position: relative;
+  top: 9px;
+}
+
+/* Main tab strip = forum header pills.
+   Scoped broadly because Obsidian moves the top tab group between
+   .workspace-tabs and .workspace-tabs.mod-top depending on frame mode. */
+.workspace-tab-header-container {
+  display: flex;
+  align-items: center;
+  height: 58px;
+  padding: 7px 12px 7px 10px;
+  gap: 8px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.workspace-tab-header-container-inner {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  width: fit-content;
+  max-width: calc(100% - 40px);
+  padding: 4px;
+  gap: 2px;
+  border-radius: var(--nle-radius-pill);
+  background: var(--nle-pill-bg);
+  box-shadow: var(--nle-pill-ring), var(--nle-pill-shadow);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.workspace-tab-header-container-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.workspace-tab-header {
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--nle-radius-pill);
+  background: transparent;
+  box-shadow: none;
+  color: var(--nle-control-fg);
+  transition:
+    background-color var(--nle-fast) ease-out,
+    color var(--nle-fast) ease-out;
+}
+
+.workspace-tab-header::before,
+.workspace-tab-header::after {
+  display: none;
+}
+
+.workspace-tab-header:hover {
+  background: var(--nle-pill-hover);
+}
+
+.workspace-tab-header.is-active {
+  background: var(--nle-tab-sel);
+  color: var(--nle-fg-solid);
+}
+
+.workspace-tab-header-inner {
+  gap: 7px;
+  padding: 0;
+}
+
+.workspace-tab-header-inner-title {
+  font-size: 13.5px;
+  font-weight: 450;
+  color: var(--nle-control-fg);
+}
+
+.workspace-tab-header.is-active .workspace-tab-header-inner-title {
+  color: var(--nle-fg-solid);
+  font-weight: 550;
+  -webkit-text-stroke: 0.2px currentColor;
+}
+
+.workspace-tab-header-inner-icon {
+  color: var(--nle-control-dim);
+  --icon-size: 15px;
+}
+
+.workspace-tab-header.is-active .workspace-tab-header-inner-icon {
+  color: var(--nle-accent);
+}
+
+.workspace-tab-header-inner-close-button {
+  border-radius: 50%;
+  color: var(--nle-control-dim);
+}
+
+.workspace-tab-header-inner-close-button:hover {
+  background: var(--nle-pill-press);
+  color: var(--nle-fg-solid);
+}
+
+/* New tab / tab list become round header buttons, like the forum search pill */
+.workspace-tab-header-new-tab,
+.workspace-tab-header-tab-list {
+  margin-left: 2px;
+}
+
+.workspace-tab-header-new-tab .clickable-icon,
+.workspace-tab-header-tab-list .clickable-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--nle-pill-bg);
+  box-shadow: var(--nle-pill-ring), var(--nle-pill-shadow);
+  color: var(--nle-control-fg);
+}
+
+.workspace-tab-header-new-tab .clickable-icon:hover,
+.workspace-tab-header-tab-list .clickable-icon:hover {
+  background: var(--nle-pill-hover);
+  color: var(--nle-fg-solid);
+}
+
+/* Liquid-glass active tab indicator (injected by the Neverlose plugin) */
+.workspace-tab-header-container-inner {
+  position: relative;
+}
+
+.workspace-tab-header {
+  position: relative;
+  z-index: 1;
+}
+
+.nle-tab-liquid {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 0;
+  height: 36px;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: var(--nle-radius-pill);
+  background:
+    radial-gradient(
+      130% 180% at 18% 0%,
+      rgba(255, 255, 255, 0.22),
+      transparent 55%
+    ),
+    radial-gradient(
+      110% 140% at 88% 110%,
+      rgba(78, 125, 255, 0.3),
+      transparent 62%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.14),
+      rgba(255, 255, 255, 0.035)
+    ),
+    rgba(78, 125, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 22px rgba(78, 125, 255, 0.16),
+    0 8px 28px rgba(0, 0, 0, 0.35);
+  transition:
+    left 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    top 0.2s var(--nle-ease),
+    height 0.2s var(--nle-ease),
+    opacity 0.18s ease-out;
+  will-change: left, width;
+}
+
+.nle-tab-liquid::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(78, 125, 255, 0.35),
+    transparent 70%
+  );
+  filter: blur(18px);
+  opacity: 0.55;
+}
+
+.nle-tab-liquid::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.22) 48%,
+    transparent 64%
+  );
+  mix-blend-mode: screen;
+  animation: nle-liquid-sheen 4.2s var(--nle-ease) infinite;
+}
+
+@keyframes nle-liquid-sheen {
+  0%,
+  55% {
+    transform: translateX(-70%);
+  }
+  100% {
+    transform: translateX(70%);
+  }
+}
+
+.workspace-tab-header-container-inner.nle-liquid-active
+  .workspace-tab-header.is-active,
+.workspace-tab-header-container-inner:has(> .nle-tab-liquid)
+  .workspace-tab-header.is-active {
+  background: transparent;
+}
+
+/* Ribbon */
+.workspace-ribbon.mod-left {
+  background: transparent;
+  border-right: 0;
+  padding: 8px 5px;
+}
+
+.workspace-ribbon.mod-left.is-collapsed {
+  border-right: 0;
+}
+
+.workspace-ribbon .side-dock-actions,
+.workspace-ribbon .side-dock-settings {
+  gap: 4px;
+}
+
+.workspace-ribbon .clickable-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: var(--nle-control-dim);
+}
+
+.workspace-ribbon .clickable-icon:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg-solid);
+}
+
+.workspace-ribbon .clickable-icon.is-active {
+  background: var(--nle-nav-active-bg);
+  color: var(--nle-accent);
+}
+
+/* Keep ribbon / plugin icons visible even when a plugin ships its own SVG */
+.workspace-ribbon .clickable-icon svg,
+.workspace-ribbon .side-dock-ribbon-action svg {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sidebar-toggle-button {
+  border-radius: 10px;
+  color: var(--nle-control-dim);
+}
+
+/* 06. Side panels ======================================================== */
+
+.workspace-split.mod-left-split,
+.workspace-split.mod-right-split {
+  background: var(--nle-panel-bg);
+  border-radius: var(--nle-radius-panel);
+  box-shadow: var(--nle-panel-ring), var(--nle-panel-shadow);
+  -webkit-backdrop-filter: blur(12px) saturate(0.92);
+  backdrop-filter: blur(12px) saturate(0.92);
+  margin-bottom: 10px;
+}
+
+.workspace-split.mod-left-split {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+.workspace-split.mod-right-split {
+  margin-left: 6px;
+  margin-right: 10px;
+}
+
+.workspace-split.mod-left-split .workspace-tabs,
+.workspace-split.mod-right-split .workspace-tabs,
+.workspace-split.mod-left-split .workspace-tab-container,
+.workspace-split.mod-right-split .workspace-tab-container,
+.workspace-split:not(.mod-root) .workspace-leaf,
+.workspace-split:not(.mod-root) .workspace-leaf-content,
+.workspace-split:not(.mod-root) .view-content {
+  background: transparent;
+}
+
+/* Sidebar tab strip */
+.workspace-split:not(.mod-root) .workspace-tab-header-container {
+  height: 44px;
+  padding: 6px 8px 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.workspace-split:not(.mod-root) .workspace-tab-header-container-inner {
+  width: auto;
+  max-width: none;
+  height: auto;
+  margin: 0;
+  padding: 2px;
+  gap: 2px;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  overflow: visible;
+}
+
+.workspace-split:not(.mod-root) .workspace-tab-header {
+  height: 32px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--nle-muted);
+}
+
+.workspace-split:not(.mod-root) .workspace-tab-header::before,
+.workspace-split:not(.mod-root) .workspace-tab-header::after {
+  display: none;
+}
+
+.workspace-split:not(.mod-root) .workspace-tab-header:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg);
+}
+
+.workspace-split:not(.mod-root) .workspace-tab-header.is-active {
+  background: var(--nle-tab-sel);
+  color: var(--nle-fg-solid);
+}
+
+.workspace-split:not(.mod-root) .workspace-tab-header-inner-title {
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.workspace-split:not(.mod-root)
+  .workspace-tab-header.is-active
+  .workspace-tab-header-inner-icon {
+  color: var(--nle-accent);
+}
+
+/* Vault profile footer */
+.workspace-sidedock-vault-profile {
+  background: transparent;
+  border-top: 1px solid var(--nle-divider);
+  padding: 8px 10px;
+}
+
+/* 07. File explorer ====================================================== */
+
+.workspace-leaf-content[data-type="file-explorer"] .view-content {
+  padding: 0;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container {
+  padding: 2px 8px 14px;
+}
+
+/* Forum-style "CATEGORIES" section label */
+.workspace-leaf-content[data-type="file-explorer"]
+  .nav-files-container::before {
+  content: "CATEGORIES";
+  display: block;
+  padding: 10px 10px 6px 22px;
+  color: var(--nle-nav-section);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-opacity='.5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: 9px 9px;
+  background-size: 10px 10px;
+  background-repeat: no-repeat;
+  font-family: var(--nle-font-sans);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Hide the redundant vault-name root row — categories start at the top */
+.nav-folder.mod-root > .nav-folder-title {
+  display: none;
+}
+
+.nav-folder.mod-root > .nav-folder-children {
+  padding-left: 0;
+}
+
+.tree-item.nav-folder,
+.tree-item.nav-file {
+  margin: 1px 0;
+}
+
+.tree-item-self.nav-folder-title,
+.tree-item-self.nav-file-title {
+  min-height: 32px;
+  padding: 4px 8px;
+  border-radius: 9px;
+  color: var(--nle-nav-row-fg);
+  font-family: var(--nle-font-sans);
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.2;
+  transition:
+    background-color var(--nle-fast) ease-out,
+    color var(--nle-fast) ease-out;
+}
+
+.tree-item-self.nav-folder-title:hover,
+.tree-item-self.nav-file-title:hover {
+  background: var(--nle-tab-sel);
+  color: var(--nle-fg);
+}
+
+.tree-item-self.nav-folder-title.is-active,
+.tree-item-self.nav-file-title.is-active {
+  background: var(--nle-nav-active-bg);
+  color: var(--nle-fg-solid);
+}
+
+.nav-folder-title-content,
+.nav-file-title-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Colored category square before top-level folders (Discourse --style-square) */
+.nav-folder-title-content::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 2.5px;
+  background: var(--nle-cat-color, rgba(255, 255, 255, 0.22));
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+/* Nested folders become small category dots */
+.nav-folder .nav-folder .nav-folder-title-content::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nle-cat-color, rgba(255, 255, 255, 0.3));
+  opacity: 0.85;
+}
+
+/* File rows get a quiet document glyph */
+.nav-file-title-content::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  opacity: 0.42;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+.nav-file-title.is-active .nav-file-title-content::before {
+  opacity: 1;
+  background-color: var(--nle-accent);
+}
+
+/* Collapse chevrons */
+.nav-folder-collapse-indicator {
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+  color: var(--nle-control-dim);
+}
+
+.nav-folder-collapse-indicator svg {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2;
+}
+
+/* Explorer action buttons */
+.workspace-leaf-content[data-type="file-explorer"]
+  .nav-buttons-container
+  .clickable-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--nle-control-dim);
+}
+
+.workspace-leaf-content[data-type="file-explorer"]
+  .nav-buttons-container
+  .clickable-icon:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg-solid);
+}
+
+/* Category colors — matched to the forum badges.
+   Personal vault mapping first, then a generic fallback. */
+.nav-folder-title[data-path="00 - Hub"] {
+  --nle-cat-color: var(--nle-cat-hub);
+}
+.nav-folder-title[data-path="01 - Subjects"] {
+  --nle-cat-color: var(--nle-cat-subjects);
+}
+.nav-folder-title[data-path="02 - Projects"] {
+  --nle-cat-color: var(--nle-cat-projects);
+}
+.nav-folder-title[data-path="03 - Bacalaureat"] {
+  --nle-cat-color: var(--nle-cat-bac);
+}
+.nav-folder-title[data-path="99 - Archive"] {
+  --nle-cat-color: var(--nle-cat-archive);
+}
+.nav-folder-title[data-path="_Attachments"] {
+  --nle-cat-color: var(--nle-cat-attachments);
+}
+.nav-folder-title[data-path="_Templates"] {
+  --nle-cat-color: var(--nle-cat-templates);
+}
+
+/* Let nested category dots inherit their section's badge color */
+.nav-folder:has(> .nav-folder-title[data-path="00 - Hub"]) {
+  --nle-cat-color: var(--nle-cat-hub);
+}
+.nav-folder:has(> .nav-folder-title[data-path="01 - Subjects"]) {
+  --nle-cat-color: var(--nle-cat-subjects);
+}
+.nav-folder:has(> .nav-folder-title[data-path="02 - Projects"]) {
+  --nle-cat-color: var(--nle-cat-projects);
+}
+.nav-folder:has(> .nav-folder-title[data-path="03 - Bacalaureat"]) {
+  --nle-cat-color: var(--nle-cat-bac);
+}
+.nav-folder:has(> .nav-folder-title[data-path="99 - Archive"]) {
+  --nle-cat-color: var(--nle-cat-archive);
+}
+.nav-folder:has(> .nav-folder-title[data-path="_Attachments"]) {
+  --nle-cat-color: var(--nle-cat-attachments);
+}
+.nav-folder:has(> .nav-folder-title[data-path="_Templates"]) {
+  --nle-cat-color: var(--nle-cat-templates);
+}
+
+.nav-folder.mod-root
+  > .nav-folder-children
+  > .nav-folder:nth-child(1)
+  > .nav-folder-title {
+  --nle-cat-color: var(--nle-cat-hub);
+}
+.nav-folder.mod-root
+  > .nav-folder-children
+  > .nav-folder:nth-child(2)
+  > .nav-folder-title {
+  --nle-cat-color: var(--nle-cat-subjects);
+}
+.nav-folder.mod-root
+  > .nav-folder-children
+  > .nav-folder:nth-child(3)
+  > .nav-folder-title {
+  --nle-cat-color: var(--nle-cat-projects);
+}
+.nav-folder.mod-root
+  > .nav-folder-children
+  > .nav-folder:nth-child(4)
+  > .nav-folder-title {
+  --nle-cat-color: var(--nle-cat-bac);
+}
+.nav-folder.mod-root
+  > .nav-folder-children
+  > .nav-folder:nth-child(5)
+  > .nav-folder-title {
+  --nle-cat-color: var(--nle-cat-archive);
+}
+.nav-folder.mod-root
+  > .nav-folder-children
+  > .nav-folder:nth-child(6)
+  > .nav-folder-title {
+  --nle-cat-color: var(--nle-cat-attachments);
+}
+.nav-folder.mod-root
+  > .nav-folder-children
+  > .nav-folder:nth-child(7)
+  > .nav-folder-title {
+  --nle-cat-color: var(--nle-cat-templates);
+}
+.nav-folder.mod-root
+  > .nav-folder-children
+  > .nav-folder:nth-child(8)
+  > .nav-folder-title {
+  --nle-cat-color: var(--nle-cat-resell);
+}
+
+/* 08. Editor & reading view ============================================== */
+
+.view-header {
+  height: 42px;
+  padding: 0 14px;
+  background: transparent;
+  border-bottom: 0;
+  box-shadow: none;
+}
+
+.workspace-leaf-content[data-type="markdown"] .view-header-title {
+  display: none;
+}
+
+.view-header-nav-buttons {
+  gap: 2px;
+}
+
+.view-header .clickable-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  color: var(--nle-control-dim);
+}
+
+.view-header .clickable-icon:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg-solid);
+}
+
+.view-header-breadcrumb {
+  color: var(--nle-muted);
+  font-size: 12px;
+}
+
+.markdown-source-view,
+.markdown-reading-view,
+.markdown-preview-view,
+.cm-editor,
+.cm-scroller {
+  background: transparent;
+}
+
+/* Forum-width column */
+.markdown-source-view.mod-cm6 .cm-contentContainer {
+  width: auto;
+  max-width: none;
+  margin: 0;
+}
+
+.markdown-source-view.mod-cm6 .cm-content {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin-inline: 0;
+  padding-inline: var(--nle-editor-pad);
+}
+
+/* Only constrain the column when Obsidian's "Readable line length" is ON. */
+.markdown-source-view.mod-cm6.is-readable-line-width .cm-content {
+  max-width: calc(var(--nle-content-width) + var(--nle-editor-pad) * 2);
+  margin-inline: auto;
+}
+
+.markdown-preview-view {
+  padding: 24px var(--nle-editor-pad) 96px;
+}
+
+.markdown-preview-view .markdown-preview-sizer {
+  max-width: none;
+  margin-inline: 0;
+}
+
+.markdown-preview-view.is-readable-line-width .markdown-preview-sizer {
+  max-width: var(--nle-content-width);
+  margin-inline: auto;
+}
+
+.inline-title {
+  width: 100%;
+  max-width: none;
+  margin: 8px 0 6px;
+  font-size: 2rem;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--nle-fg-solid);
+  text-align: left;
+  text-wrap: balance;
+}
+
+.is-readable-line-width .inline-title {
+  max-width: var(--nle-content-width);
+  margin-inline: auto;
+}
+
+/* With "Readable line length" off, keep the title on the same
+   left edge as the editor text (instead of the bare pane edge). */
+.markdown-source-view:not(.is-readable-line-width) .inline-title {
+  padding-inline: calc(var(--nle-editor-pad) - 12px);
+}
+
+.cm-s-obsidian .HyperMD-header {
+  color: var(--nle-fg-solid);
+}
+
+.cm-s-obsidian .cm-header {
+  color: var(--nle-fg-solid);
+}
+
+.cm-s-obsidian .cm-line {
+  padding-inline: 0;
+}
+
+.cm-s-obsidian .cm-active.cm-line {
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.cm-s-obsidian .cm-cursor {
+  border-left: 2px solid var(--nle-accent);
+}
+
+.cm-s-obsidian .cm-selectionBackground,
+.cm-s-obsidian .CodeMirror-selected,
+.cm-s-obsidian .cm-selectionBackground * {
+  background: rgba(78, 125, 255, 0.25) !important;
+}
+
+.cm-s-obsidian .cm-gutters {
+  background: transparent;
+  border-right: 0;
+  color: var(--nle-faint);
+}
+
+.cm-s-obsidian .cm-lineNumbers .cm-gutterElement {
+  color: var(--nle-faint);
+  font-size: 11px;
+}
+
+.cm-s-obsidian .cm-fold-indicator .collapse-indicator {
+  color: var(--nle-control-dim);
+}
+
+/* Properties / frontmatter as a small forum-style card */
+.metadata-container {
+  width: 100%;
+  max-width: none;
+  margin: 10px 0 18px;
+  background: var(--nle-surface-1);
+  border-radius: var(--nle-radius-card);
+  box-shadow: inset 0 0 0 1px var(--nle-hairline);
+  padding: 10px 12px;
+}
+
+.is-readable-line-width .metadata-container {
+  max-width: var(--nle-content-width);
+  margin-inline: auto;
+}
+
+.markdown-source-view:not(.is-readable-line-width) .metadata-container {
+  margin-inline: calc(var(--nle-editor-pad) + 18px);
+}
+
+.metadata-property-key,
+.metadata-property-key-input {
+  color: var(--nle-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.metadata-property-value,
+.metadata-property-value .multi-select-container {
+  color: var(--nle-control-fg);
+  font-size: 13px;
+}
+
+.metadata-property-icon {
+  color: var(--nle-control-dim);
+}
+
+.metadata-property:hover {
+  background: var(--nle-surface-1);
+  border-radius: 7px;
+}
+
+.metadata-add-button {
+  color: var(--nle-control-dim);
+  border-radius: 999px;
+}
+
+/* Embeds and internal previews */
+.markdown-embed,
+.file-embed {
+  background: var(--nle-surface-1);
+  border-radius: var(--nle-radius-card);
+  box-shadow: inset 0 0 0 1px var(--nle-hairline);
+  border-left: 3px solid var(--nle-border);
+  padding: 10px 14px;
+}
+
+.markdown-embed-title,
+.file-embed-title {
+  color: var(--nle-fg-solid);
+  font-weight: 550;
+}
+
+/* 09. Typography ========================================================= */
+
+.markdown-rendered,
+.markdown-preview-view,
+.cm-s-obsidian {
+  color: var(--nle-prose);
+}
+
+.markdown-rendered p,
+.markdown-preview-view p {
+  margin-block: 0 var(--p-spacing);
+}
+
+.markdown-rendered h1,
+.markdown-preview-view h1,
+.cm-s-obsidian .HyperMD-header-1 {
+  font-size: var(--h1-size);
+  font-weight: var(--h1-weight);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--nle-fg-solid);
+  margin-block: 1.2em 0.5em;
+  text-wrap: balance;
+}
+
+.markdown-rendered h2,
+.markdown-preview-view h2,
+.cm-s-obsidian .HyperMD-header-2 {
+  font-size: var(--h2-size);
+  font-weight: var(--h2-weight);
+  line-height: 1.25;
+  color: var(--nle-fg-solid);
+  margin-block: 1.5em 0.45em;
+}
+
+.markdown-rendered h3,
+.markdown-preview-view h3,
+.cm-s-obsidian .HyperMD-header-3 {
+  font-size: var(--h3-size);
+  font-weight: var(--h3-weight);
+  line-height: 1.3;
+  color: var(--nle-fg-solid);
+  margin-block: 1.35em 0.4em;
+}
+
+.markdown-rendered h4,
+.markdown-preview-view h4,
+.cm-s-obsidian .HyperMD-header-4 {
+  font-size: var(--h4-size);
+  font-weight: var(--h4-weight);
+  color: var(--nle-fg-solid);
+  margin-block: 1.25em 0.35em;
+}
+
+.markdown-rendered h5,
+.markdown-preview-view h5,
+.cm-s-obsidian .HyperMD-header-5 {
+  font-size: var(--h5-size);
+  font-weight: var(--h5-weight);
+  color: var(--nle-fg-solid);
+  margin-block: 1.15em 0.3em;
+}
+
+.markdown-rendered h6,
+.markdown-preview-view h6,
+.cm-s-obsidian .HyperMD-header-6 {
+  font-size: var(--h6-size);
+  font-weight: var(--h6-weight);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--nle-muted);
+  margin-block: 1.1em 0.3em;
+}
+
+.markdown-rendered strong,
+.markdown-preview-view strong,
+.cm-s-obsidian .cm-strong {
+  color: var(--nle-fg-solid);
+  font-weight: 650;
+}
+
+.markdown-rendered em,
+.markdown-preview-view em,
+.cm-s-obsidian .cm-em {
+  color: var(--nle-fg);
+}
+
+.markdown-rendered del,
+.markdown-preview-view del,
+.cm-s-obsidian .cm-strikethrough {
+  color: var(--nle-muted);
+}
+
+.markdown-rendered hr,
+.markdown-preview-view hr,
+.cm-s-obsidian .hr {
+  border: 0;
+  border-top: 1px solid var(--nle-divider);
+  margin-block: 1.8em;
+}
+
+.markdown-rendered ul,
+.markdown-rendered ol,
+.markdown-preview-view ul,
+.markdown-preview-view ol {
+  padding-inline-start: 1.45em;
+}
+
+.markdown-rendered li,
+.markdown-preview-view li {
+  margin-block: 0.2em;
+}
+
+.markdown-rendered li::marker,
+.markdown-preview-view li::marker {
+  color: var(--nle-control-dim);
+}
+
+.markdown-rendered ul > li::marker {
+  font-size: 0.85em;
+}
+
+/* 10. Links, tags, highlights ============================================ */
+
+.markdown-rendered a,
+.markdown-preview-view a,
+.cm-s-obsidian .cm-link,
+.cm-s-obsidian .cm-hmd-internal-link,
+.cm-s-obsidian .cm-url {
+  color: var(--nle-accent);
+  text-decoration: none;
+  transition: color var(--nle-fast) ease-out;
+}
+
+.markdown-rendered a:hover,
+.markdown-preview-view a:hover,
+.cm-s-obsidian .cm-link:hover,
+.cm-s-obsidian .cm-hmd-internal-link:hover {
+  color: var(--nle-accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.markdown-rendered a.is-unresolved,
+.cm-s-obsidian .is-unresolved {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.markdown-rendered a.external-link::after,
+.markdown-preview-view a.external-link::after {
+  color: var(--nle-control-dim);
+}
+
+.markdown-rendered mark,
+.markdown-preview-view mark,
+.cm-s-obsidian .cm-highlight {
+  background: var(--text-highlight-bg);
+  color: var(--nle-fg-solid);
+  border-radius: 3px;
+  padding: 0.05em 0.18em;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1px solid var(--nle-border-subtle);
+  border-radius: 8px;
+  background: var(--nle-surface-1);
+  color: var(--nle-control-fg);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.6;
+  text-decoration: none;
+}
+
+.tag:hover {
+  background: var(--nle-surface-2);
+  border-color: var(--nle-border);
+  color: var(--nle-fg-solid);
+}
+
+/* 11. Quotes, callouts, details ========================================== */
+
+.markdown-rendered blockquote,
+.markdown-preview-view blockquote {
+  margin: 0 0 1em;
+  padding: 10px 14px;
+  background: var(--nle-surface-1);
+  border-inline-start: 3px solid var(--nle-border);
+  border-radius: 0 var(--nle-radius-lg) var(--nle-radius-lg) 0;
+  color: var(--nle-prose);
+}
+
+.markdown-rendered blockquote p:last-child,
+.markdown-preview-view blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.cm-s-obsidian .cm-line.HyperMD-quote {
+  background: var(--nle-surface-1);
+  border-inline-start: 3px solid var(--nle-border);
+  padding-inline-start: 12px;
+  color: var(--nle-prose);
+}
+
+.cm-s-obsidian .cm-line.HyperMD-quote.HyperMD-quote-1 {
+  border-start-start-radius: var(--nle-radius-lg);
+}
+
+/* Callouts as rounded forum panels */
+.callout {
+  --callout-border-width: 0px;
+  --callout-border-opacity: 0.55;
+  --callout-padding: 12px 14px;
+  --callout-radius: var(--nle-radius-card);
+  --callout-blend-mode: normal;
+  --callout-title-padding: 0;
+  --callout-title-size: 0.95em;
+  --callout-content-padding: 6px 0 0;
+  background: var(--nle-surface-1);
+  box-shadow: inset 0 0 0 1px var(--nle-hairline);
+  border-left: 3px solid rgba(var(--callout-color), 0.65);
+  margin-block: 1em;
+}
+
+.callout-title {
+  display: flex;
+  align-items: center;
+  color: var(--nle-fg-solid);
+  font-weight: 550;
+  gap: 8px;
+}
+
+.callout-icon {
+  display: flex;
+  align-items: center;
+}
+
+.callout-title-inner {
+  font-weight: 550;
+}
+
+.callout-icon {
+  color: rgb(var(--callout-color));
+}
+
+.callout-content {
+  color: var(--nle-prose);
+}
+
+.callout.is-collapsible .callout-title {
+  cursor: pointer;
+}
+
+.callout[data-callout="quote"],
+.callout[data-callout="cite"] {
+  border-left-color: var(--nle-border);
+}
+
+/* Native <details> blocks — the price-list bars from the reference post */
+.markdown-rendered details,
+.markdown-preview-view details,
+.markdown-source-view details {
+  background: var(--nle-surface-1);
+  border-radius: var(--nle-radius-card);
+  box-shadow: inset 0 0 0 1px var(--nle-hairline);
+  padding: 8px 12px;
+  margin-block: 0.6em;
+  overflow: hidden;
+}
+
+.markdown-rendered details > summary,
+.markdown-preview-view details > summary,
+.markdown-source-view details > summary {
+  color: var(--nle-fg);
+  font-weight: 550;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.markdown-rendered details > summary::-webkit-details-marker,
+.markdown-source-view details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.markdown-rendered details > summary::before,
+.markdown-preview-view details > summary::before,
+.markdown-source-view details > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid var(--nle-control-dim);
+  transition: transform var(--nle-fast) var(--nle-ease);
+}
+
+.markdown-rendered details[open] > summary::before,
+.markdown-preview-view details[open] > summary::before,
+.markdown-source-view details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.markdown-rendered details > *:not(summary),
+.markdown-preview-view details > *:not(summary),
+.markdown-source-view details > *:not(summary) {
+  margin-top: 8px;
+}
+
+/* 12. Tables, code, math ================================================= */
+
+.markdown-rendered .table-wrapper,
+.markdown-preview-view .table-wrapper {
+  margin-block: 1em;
+  border-radius: var(--nle-radius-card);
+}
+
+.markdown-rendered table,
+.markdown-preview-view table,
+.markdown-source-view.mod-cm6 .cm-table-widget table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--nle-radius-card);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--nle-hairline);
+  background: transparent;
+}
+
+.markdown-rendered th,
+.markdown-preview-view th,
+.markdown-source-view.mod-cm6 .cm-table-widget th {
+  padding: 8px 12px;
+  background: var(--nle-surface-1);
+  border: 0;
+  border-bottom: 1px solid var(--nle-divider);
+  color: var(--nle-fg-solid);
+  font-size: 0.875em;
+  font-weight: 550;
+  text-align: left;
+}
+
+.markdown-rendered td,
+.markdown-preview-view td,
+.markdown-source-view.mod-cm6 .cm-table-widget td {
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--nle-divider);
+  color: var(--nle-prose);
+}
+
+.markdown-rendered tr:last-child td,
+.markdown-preview-view tr:last-child td,
+.markdown-source-view.mod-cm6 .cm-table-widget tr:last-child td {
+  border-bottom: 0;
+}
+
+.markdown-rendered tbody tr:hover,
+.markdown-preview-view tbody tr:hover {
+  background: var(--nle-surface-1);
+}
+
+/* Live-preview tables keep Obsidian's cell wrapper for inline editing;
+   move the visual padding there so it isn't doubled. */
+.markdown-source-view.mod-cm6 .cm-table-widget th,
+.markdown-source-view.mod-cm6 .cm-table-widget td {
+  padding: 0;
+}
+
+.markdown-source-view.mod-cm6 .cm-table-widget .table-cell-wrapper {
+  padding: 8px 12px;
+}
+
+/* Inline code */
+.markdown-rendered :not(pre) > code,
+.markdown-preview-view :not(pre) > code,
+.cm-s-obsidian .cm-inline-code {
+  padding: 2px 5px;
+  border-radius: 6px;
+  background: var(--nle-accent-fill);
+  color: #e6edf3;
+  font-family: var(--nle-font-code);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
+/* Code blocks */
+.markdown-rendered pre,
+.markdown-preview-view pre {
+  position: relative;
+  padding: 14px 16px;
+  border-radius: var(--nle-radius-card);
+  background: var(--code-background);
+  box-shadow: inset 0 0 0 1px var(--nle-hairline);
+  overflow-x: auto;
+}
+
+.markdown-rendered pre code,
+.markdown-preview-view pre code {
+  padding: 0;
+  background: transparent;
+  color: var(--code-normal);
+  font-family: var(--nle-font-code);
+  font-size: 0.84em;
+  line-height: 1.6;
+}
+
+.cm-s-obsidian .HyperMD-codeblock {
+  background: var(--code-background);
+  font-family: var(--nle-font-code);
+  font-size: 0.86em;
+  color: var(--code-normal);
+}
+
+.cm-s-obsidian .HyperMD-codeblock-begin,
+.cm-s-obsidian .HyperMD-codeblock-end {
+  color: var(--nle-muted);
+}
+
+.cm-s-obsidian .HyperMD-codeblock-begin {
+  border-top-left-radius: var(--nle-radius-card);
+  border-top-right-radius: var(--nle-radius-card);
+}
+
+.cm-s-obsidian .HyperMD-codeblock-end {
+  border-bottom-left-radius: var(--nle-radius-card);
+  border-bottom-right-radius: var(--nle-radius-card);
+}
+
+.cm-s-obsidian .cm-comment,
+.markdown-rendered .token.comment {
+  color: var(--code-comment);
+  font-style: normal;
+}
+
+.cm-s-obsidian .cm-keyword,
+.markdown-rendered .token.keyword {
+  color: var(--code-keyword);
+}
+
+.cm-s-obsidian .cm-string,
+.markdown-rendered .token.string {
+  color: var(--code-string);
+}
+
+.cm-s-obsidian .cm-number,
+.markdown-rendered .token.number {
+  color: var(--code-value);
+}
+
+.cm-s-obsidian .cm-def,
+.cm-s-obsidian .cm-variable-2,
+.markdown-rendered .token.function {
+  color: var(--code-function);
+}
+
+.cm-s-obsidian .cm-property,
+.markdown-rendered .token.property {
+  color: var(--code-property);
+}
+
+.copy-code-button,
+.markdown-rendered button.copy-code-button {
+  border-radius: 999px;
+  background: var(--nle-pill-bg);
+  color: var(--nle-muted);
+  border: 1px solid var(--nle-border-subtle);
+  font-size: 11px;
+  padding: 3px 9px;
+}
+
+.copy-code-button:hover {
+  background: var(--nle-surface-2);
+  color: var(--nle-fg-solid);
+}
+
+/* Math */
+.math,
+.math-block,
+mjx-container {
+  color: var(--nle-fg-solid);
+}
+
+.mjx-container[jax="CHTML"][display="true"] {
+  margin-block: 1em !important;
+}
+
+/* 13. Checkboxes, toggles, sliders ======================================= */
+
+input[type="checkbox"].task-list-item-checkbox {
+  appearance: none;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  border: 1px solid var(--checkbox-border-color);
+  border-radius: var(--checkbox-radius);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--nle-fast) ease-out,
+    border-color var(--nle-fast) ease-out;
+}
+
+input[type="checkbox"].task-list-item-checkbox:hover {
+  border-color: var(--checkbox-color);
+}
+
+input[type="checkbox"].task-list-item-checkbox:checked {
+  background: var(--checkbox-color);
+  border-color: var(--checkbox-color);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 4.5 4.5L19 7'/%3E%3C/svg%3E");
+  background-size: 11px 11px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.markdown-rendered .task-list-item.is-checked,
+.markdown-preview-view .task-list-item.is-checked {
+  color: var(--nle-muted);
+  text-decoration-color: var(--nle-faint);
+}
+
+/* Obsidian toggle switch */
+.checkbox-container,
+.modal .checkbox-container {
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  transition: background-color var(--nle-dur) var(--nle-ease);
+}
+
+.checkbox-container:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.checkbox-container.is-enabled {
+  background: var(--nle-accent);
+  box-shadow:
+    0 0 0 1px rgba(78, 125, 255, 0.4),
+    0 0 14px rgba(78, 125, 255, 0.25);
+}
+
+.checkbox-container::after,
+.modal .checkbox-container::after {
+  width: 16px;
+  height: 16px;
+  top: 3px;
+  left: 3px;
+  margin: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform var(--nle-dur) var(--nle-ease),
+    background-color var(--nle-dur) var(--nle-ease);
+}
+
+.checkbox-container.is-enabled::after,
+.modal .checkbox-container.is-enabled::after {
+  left: 3px;
+  transform: translate3d(18px, 0, 0);
+}
+
+/* Keep the thumb vertically centered while pressed */
+.checkbox-container:where(:not(.is-disabled)):active::after,
+.modal .checkbox-container:where(:not(.is-disabled)):active::after,
+.checkbox-container.is-enabled:where(:not(.is-disabled)):active::after,
+.modal .checkbox-container.is-enabled:where(:not(.is-disabled)):active::after {
+  top: 2px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.modal .checkbox-container.is-enabled:where(:not(.is-disabled)):active::after {
+  transform: translate3d(18px, 0, 0);
+}
+
+/* Range sliders — the blue timeline-handle treatment */
+input[type="range"],
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track,
+.slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb,
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--nle-accent);
+  border: 2px solid var(--nle-bg);
+  box-shadow:
+    0 0 0 1px var(--nle-ring),
+    0 0 12px rgba(78, 125, 255, 0.35);
+  cursor: pointer;
+  transition:
+    box-shadow var(--nle-fast) ease-out,
+    transform var(--nle-fast) ease-out;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb,
+.slider:hover::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 1px var(--nle-ring),
+    0 0 18px rgba(78, 125, 255, 0.55);
+  transform: scale(1.08);
+}
+
+/* 14. Scrollbars — Discourse topic timeline ============================== */
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(
+    to right,
+    transparent calc(50% - 0.5px),
+    rgba(255, 255, 255, 0.08) calc(50% - 0.5px),
+    rgba(255, 255, 255, 0.08) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(78, 125, 255, 0.28);
+  border: 4px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(78, 125, 255, 0.62);
+  border-width: 4px;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--nle-accent);
+  border-width: 4px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.workspace-split:not(.mod-root) ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.workspace-split:not(.mod-root) ::-webkit-scrollbar-thumb {
+  border-width: 3px;
+}
+
+/* Right-side outline styled as the forum's topic timeline */
+.workspace-leaf-content[data-type="outline"] .view-content {
+  padding: 6px 8px 18px;
+}
+
+.workspace-leaf-content[data-type="outline"] .tree-item-children {
+  margin-left: 7px;
+  padding-left: 9px;
+  border-left: 1px solid var(--nle-border);
+}
+
+.workspace-leaf-content[data-type="outline"] .tree-item-self {
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: var(--nle-muted);
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.workspace-leaf-content[data-type="outline"] .tree-item-self:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg);
+}
+
+.workspace-leaf-content[data-type="outline"] .tree-item-self.is-active {
+  background: var(--nle-accent-soft);
+  color: var(--nle-fg-solid);
+}
+
+.workspace-leaf-content[data-type="outline"]
+  .tree-item-self.is-active
+  .tree-item-inner::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--nle-accent);
+  box-shadow: 0 0 0 3px rgba(78, 125, 255, 0.16);
+  vertical-align: 1px;
+}
+
+/* Block timeline — the forum-style slider next to the scrollbar */
+.workspace-leaf .view-content {
+  position: relative;
+}
+
+.view-content.nle-timeline-gutter .markdown-source-view,
+.view-content.nle-timeline-gutter .markdown-reading-view {
+  margin-right: 182px;
+}
+
+.nle-timeline {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  bottom: 10px;
+  z-index: 20;
+  display: block;
+  width: 166px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.22s ease-out;
+}
+
+.view-content.nle-timeline-on .nle-timeline {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.nle-timeline-info {
+  position: absolute;
+  top: var(--nle-timeline-y, 50%);
+  right: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  width: 118px;
+  pointer-events: none;
+  text-align: right;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9);
+  transform: translateY(-50%);
+  transition: top 0.12s linear;
+}
+
+.nle-timeline-count {
+  color: var(--nle-accent);
+  font-family: var(--nle-font-sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.nle-timeline-main {
+  width: 100%;
+  overflow: hidden;
+  color: var(--nle-fg-solid);
+  font-family: var(--nle-font-sans);
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nle-timeline-sub {
+  width: 100%;
+  overflow: hidden;
+  color: var(--nle-muted);
+  font-family: var(--nle-font-sans);
+  font-size: 11.5px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nle-timeline-sub.is-empty {
+  opacity: 0.5;
+}
+
+.nle-timeline-sub span {
+  color: var(--nle-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.nle-timeline-pct {
+  color: var(--nle-faint);
+  font-family: var(--nle-font-code);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.nle-timeline-rail {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 44px;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.nle-timeline-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(-50%);
+}
+
+.nle-timeline-fill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(78, 125, 255, 0.1),
+    var(--nle-accent)
+  );
+  transform: translateX(-50%);
+}
+
+.nle-timeline-handle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 42px;
+  border-radius: 999px;
+  background: var(--nle-accent);
+  box-shadow:
+    0 0 0 1px rgba(78, 125, 255, 0.35),
+    0 0 16px rgba(78, 125, 255, 0.55);
+  transform: translate(-50%, -50%);
+}
+
+.nle-timeline-handle::before {
+  content: "";
+  position: absolute;
+  inset: -5px -7px;
+  border-radius: 999px;
+  background: rgba(78, 125, 255, 0.18);
+  filter: blur(7px);
+}
+
+/* When the custom timeline is visible it becomes the only slider. */
+.view-content.nle-timeline-on:not(.nle-timeline-narrow)::-webkit-scrollbar,
+.view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  .workspace-leaf::-webkit-scrollbar,
+.view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  .workspace-leaf-content::-webkit-scrollbar,
+.view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  .markdown-source-view::-webkit-scrollbar,
+.view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  .markdown-reading-view::-webkit-scrollbar,
+.view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  .cm-scroller::-webkit-scrollbar,
+.view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  .markdown-preview-view::-webkit-scrollbar,
+.workspace-leaf:has(
+    > .workspace-leaf-content
+      > .view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  )::-webkit-scrollbar,
+.workspace-leaf-content:has(
+    > .view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  )::-webkit-scrollbar,
+.workspace-tabs:has(
+    .view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  )::-webkit-scrollbar,
+.workspace-split:has(
+    .view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  )::-webkit-scrollbar,
+.workspace:has(
+    .view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  )::-webkit-scrollbar,
+.app-container:has(
+    .view-content.nle-timeline-on:not(.nle-timeline-narrow)
+  )::-webkit-scrollbar,
+body.nle-timeline-global::-webkit-scrollbar,
+body.nle-timeline-global .app-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.workspace-leaf.nle-timeline-leaf::-webkit-scrollbar,
+.workspace-leaf-content.nle-timeline-leaf::-webkit-scrollbar,
+.workspace-leaf.nle-timeline-leaf .view-content::-webkit-scrollbar,
+.workspace-leaf.nle-timeline-leaf .cm-scroller::-webkit-scrollbar,
+.workspace-leaf.nle-timeline-leaf .markdown-preview-view::-webkit-scrollbar,
+.workspace-leaf.nle-timeline-leaf .markdown-source-view::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.view-content.nle-timeline-narrow .nle-timeline {
+  display: none;
+}
+
+.view-content.nle-timeline-narrow .markdown-source-view,
+.view-content.nle-timeline-narrow .markdown-reading-view {
+  margin-right: 0;
+}
+
+@media (max-width: 900px) {
+  .nle-timeline {
+    display: none;
+  }
+
+  .view-content.nle-timeline-gutter .markdown-source-view,
+  .view-content.nle-timeline-gutter .markdown-reading-view {
+    margin-right: 0;
+  }
+}
+
+/* Resize handles */
+.workspace-leaf-resize-handle {
+  background: transparent;
+  transition: background-color var(--nle-fast) ease-out;
+}
+
+.workspace-leaf-resize-handle:hover {
+  background: rgba(78, 125, 255, 0.45);
+}
+
+/* 15. Menus, prompts, modals, settings =================================== */
+
+.menu {
+  padding: 5px;
+  border: 1px solid var(--nle-popover-border);
+  border-radius: 14px;
+  background: var(--nle-popover-glass);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.menu-item {
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: var(--nle-control-fg);
+  font-size: 13px;
+}
+
+.menu-item:hover,
+.menu-item.selected {
+  background: var(--nle-tab-sel);
+  color: var(--nle-fg-solid);
+}
+
+.menu-item-icon {
+  color: var(--nle-control-dim);
+}
+
+.menu-separator {
+  margin: 4px 6px;
+  border-color: var(--nle-divider);
+}
+
+.menu-item.is-disabled {
+  color: var(--nle-faint);
+}
+
+/* Command palette / quick switcher */
+.prompt {
+  border: 1px solid var(--nle-popover-border);
+  border-radius: var(--nle-radius-dialog);
+  background: var(--nle-popover-glass);
+  box-shadow: 0 8px 60px rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.prompt-input-container {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--nle-divider);
+}
+
+.prompt-input {
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--nle-search-bg);
+  color: var(--nle-fg);
+  font-family: var(--nle-font-sans);
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.prompt-input:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 1px var(--nle-ring);
+}
+
+.prompt-results {
+  padding: 6px;
+}
+
+.suggestion-container {
+  border: 1px solid var(--nle-popover-border);
+  border-radius: 14px;
+  background: var(--nle-popover-glass);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.suggestion-item {
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: var(--nle-control-fg);
+}
+
+.suggestion-item.is-selected {
+  background: var(--nle-tab-sel);
+  color: var(--nle-fg-solid);
+}
+
+.suggestion-highlight {
+  color: var(--nle-accent-hover);
+}
+
+/* Modals */
+.modal-bg {
+  background: rgba(5, 5, 7, 0.6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.modal-container .modal {
+  border: 1px solid var(--nle-popover-border);
+  border-radius: var(--nle-radius-dialog);
+  background: var(--nle-popover-glass);
+  box-shadow: 0 8px 60px rgba(0, 0, 0, 0.65);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.modal-title {
+  color: var(--nle-fg-solid);
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.modal-close-button {
+  border-radius: 50%;
+  color: var(--nle-control-dim);
+}
+
+.modal-close-button:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg-solid);
+}
+
+/* Settings */
+.modal.mod-settings .vertical-tab-header {
+  background: transparent;
+  border-right: 1px solid var(--nle-divider);
+}
+
+.vertical-tab-nav-item {
+  margin: 1px 0;
+  padding: 7px 10px;
+  border-radius: 9px;
+  color: var(--nle-muted);
+  font-size: 13px;
+  font-weight: 450;
+}
+
+.vertical-tab-nav-item:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg);
+}
+
+.vertical-tab-nav-item.is-active {
+  background: var(--nle-accent-soft);
+  color: var(--nle-fg-solid);
+  font-weight: 550;
+}
+
+.setting-item {
+  padding: 14px 0;
+  border-top: 1px solid var(--nle-divider);
+}
+
+.setting-item-name {
+  color: var(--nle-fg);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.setting-item-description {
+  color: var(--nle-muted);
+  font-size: 12.5px;
+}
+
+.setting-item-control button {
+  min-height: 32px;
+}
+
+.setting-hotkey {
+  border-radius: 6px;
+  background: var(--nle-surface-1);
+  color: var(--nle-muted);
+  border: 1px solid var(--nle-border-subtle);
+  font-family: var(--nle-font-code);
+  font-size: 11px;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+input[type="tel"],
+textarea,
+select {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--nle-search-bg);
+  color: var(--nle-fg);
+  font-family: var(--nle-font-sans);
+  box-shadow: none;
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 1px var(--nle-ring);
+}
+
+textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+select,
+.dropdown {
+  border-radius: 999px;
+  padding-inline: 12px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--nle-faint);
+}
+
+/* Search views */
+.search-input-container input {
+  border-radius: 999px;
+  padding-inline-start: 34px;
+  padding-inline-end: 30px;
+}
+
+.search-input-container .search-input-icon {
+  color: var(--nle-control-dim);
+}
+
+/* Ctrl+F / replace bar — reserve room for the leading magnifier */
+.document-search-input input,
+.document-replace-input input {
+  padding-inline-start: 36px;
+}
+
+.document-search-input,
+.document-replace-input {
+  position: relative;
+}
+
+.search-input-clear-button {
+  color: var(--nle-control-dim);
+}
+
+.search-result-container {
+  padding: 4px 6px;
+}
+
+.search-result-file-title {
+  color: var(--nle-fg);
+  font-weight: 550;
+}
+
+.search-result-file-match {
+  border-radius: 8px;
+}
+
+.search-result-file-match:hover {
+  background: var(--nle-surface-1);
+}
+
+.search-result-file-matched-text {
+  color: var(--nle-accent-hover);
+  background: var(--nle-accent-soft);
+  border-radius: 3px;
+}
+
+/* Buttons */
+button {
+  border-radius: 999px;
+  font-family: var(--nle-font-sans);
+  font-weight: 550;
+  box-shadow: none;
+  transition:
+    background-color var(--nle-fast) ease-out,
+    color var(--nle-fast) ease-out,
+    box-shadow var(--nle-fast) ease-out;
+}
+
+button.mod-cta {
+  background: var(--nle-accent);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+button.mod-cta:hover {
+  background: var(--nle-accent-hover);
+  color: #ffffff;
+}
+
+button.mod-warning {
+  background: rgba(252, 165, 165, 0.12);
+  color: var(--nle-red);
+  border: 1px solid rgba(252, 165, 165, 0.2);
+}
+
+button.mod-warning:hover {
+  background: rgba(252, 165, 165, 0.18);
+  color: var(--nle-red);
+}
+
+.clickable-icon {
+  border-radius: var(--clickable-icon-radius);
+  color: var(--nle-control-dim);
+  transition:
+    background-color var(--nle-fast) ease-out,
+    color var(--nle-fast) ease-out;
+}
+
+.clickable-icon:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg-solid);
+}
+
+/* Notices / toasts */
+.notice {
+  border: 1px solid var(--nle-popover-border);
+  border-radius: 14px;
+  background: var(--nle-popover-glass);
+  color: var(--nle-fg);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+/* 16. Status bar ========================================================= */
+
+.status-bar {
+  min-height: 26px;
+  padding: 0 12px;
+  background: transparent;
+  border-top: 1px solid var(--nle-divider);
+  color: var(--nle-muted);
+  font-family: var(--nle-font-sans);
+  font-size: 11.5px;
+}
+
+.status-bar-item {
+  color: var(--nle-muted);
+  border-radius: 6px;
+  padding: 0 6px;
+}
+
+.status-bar-item.mod-clickable:hover {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg);
+}
+
+/* 17. Graph, canvas, misc plugins ======================================== */
+
+.graph-view.color-fill {
+  color: #9eb8ff;
+}
+.graph-view.color-fill-focused {
+  color: var(--nle-accent);
+}
+.graph-view.color-fill-tag {
+  color: var(--nle-yellow);
+}
+.graph-view.color-fill-attachment {
+  color: var(--nle-cat-media);
+}
+.graph-view.color-fill-unresolved {
+  color: rgba(255, 255, 255, 0.25);
+}
+.graph-view.color-line {
+  color: rgba(255, 255, 255, 0.12);
+}
+.graph-view.color-text {
+  color: rgba(255, 255, 255, 0.85);
+}
+.graph-view.color-arrow {
+  color: rgba(255, 255, 255, 0.5);
+}
+.graph-view.color-circle {
+  color: var(--nle-accent);
+}
+
+.graph-controls {
+  border: 1px solid var(--nle-popover-border);
+  border-radius: 14px;
+  background: var(--nle-popover-glass);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.graph-control-section-header {
+  color: var(--nle-fg-solid);
+  font-weight: 550;
+}
+
+/* Canvas */
+.canvas-wrapper,
+.canvas {
+  background: var(--nle-bg);
+}
+
+.canvas-background {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.09) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+.canvas-node {
+  border-radius: 12px;
+}
+
+.canvas-node-container {
+  border: 1px solid var(--nle-border-subtle);
+  border-radius: 12px;
+  background: var(--nle-bg-2);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.canvas-node.is-focused .canvas-node-container {
+  border-color: var(--nle-accent);
+  box-shadow: 0 0 0 3px var(--nle-accent-soft);
+}
+
+.canvas-node-label {
+  color: var(--nle-muted);
+}
+
+/* Kanban */
+.kanban-plugin__board {
+  background: transparent;
+}
+
+.kanban-plugin__lane {
+  border: 0;
+  border-radius: var(--nle-radius-card);
+  background: var(--nle-surface-1);
+  box-shadow: inset 0 0 0 1px var(--nle-hairline);
+}
+
+.kanban-plugin__lane-header {
+  border-bottom: 1px solid var(--nle-divider);
+}
+
+.kanban-plugin__lane-title {
+  color: var(--nle-fg-solid);
+  font-weight: 550;
+}
+
+.kanban-plugin__item {
+  border: 0;
+  border-radius: 10px;
+  background: var(--nle-bg-2);
+  box-shadow: inset 0 0 0 1px var(--nle-hairline);
+}
+
+.kanban-plugin__item:hover {
+  box-shadow: inset 0 0 0 1px var(--nle-border);
+}
+
+.kanban-plugin__item-title {
+  color: var(--nle-fg);
+}
+
+/* Dataview / Bases tables */
+.dataview.table-view-table,
+.bases-table {
+  border-radius: var(--nle-radius-card);
+}
+
+.dataview.table-view-table th,
+.bases-th {
+  background: var(--nle-surface-1);
+  color: var(--nle-fg-solid);
+}
+
+/* PDF */
+.pdf-container,
+.pdf-viewer {
+  background: var(--nle-bg-2);
+}
+
+.pdf-sidebar {
+  background: transparent;
+  border-right: 1px solid var(--nle-divider);
+}
+
+.pdf-thumbnail-container:hover {
+  background: var(--nle-surface-1);
+}
+
+/* 18. Mobile & print ===================================================== */
+
+.is-mobile .workspace-split.mod-left-split,
+.is-mobile .workspace-split.mod-right-split {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.is-mobile
+  .workspace-split.mod-root
+  > .workspace-tabs
+  > .workspace-tab-header-container::before {
+  display: none;
+}
+
+.is-mobile
+  .workspace-split.mod-root
+  > .workspace-tabs
+  > .workspace-tab-header-container {
+  height: 50px;
+  padding: 5px 8px;
+}
+
+.is-mobile .markdown-preview-view {
+  padding: 18px 20px 80px;
+}
+
+.is-mobile .markdown-source-view.mod-cm6 .cm-content {
+  padding-inline: 20px;
+}
+
+.is-mobile .workspace-drawer {
+  background: var(--nle-bg);
+}
+
+.workspace-drawer-header {
+  border-bottom: 1px solid var(--nle-divider);
+}
+
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  .markdown-preview-view {
+    color: #111111;
+  }
+
+  .markdown-rendered h1,
+  .markdown-rendered h2,
+  .markdown-rendered h3,
+  .markdown-rendered h4,
+  .markdown-rendered strong {
+    color: #111111 !important;
+  }
+
+  .markdown-rendered a {
+    color: #1a4fd6 !important;
+  }
+
+  .markdown-rendered blockquote,
+  .callout,
+  .markdown-rendered details,
+  .markdown-rendered pre {
+    background: #f5f5f5 !important;
+    box-shadow: none !important;
+  }
+}

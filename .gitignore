@@ -1,0 +1,17 @@
+# Obsidian vault data
+.obsidian/
+
+# Plugin runtime data
+**/data.json
+debug.log
+
+# Release/build artefacts
+dist/
+*.zip
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
