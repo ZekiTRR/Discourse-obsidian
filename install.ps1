@@ -30,6 +30,27 @@ function Read-JsonSafe {
     }
 }
 
+$releaseInfo = $null
+try {
+    $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/latest" -Headers @{
+        "User-Agent" = "neverlose-installer"
+        "Accept" = "application/vnd.github+json"
+    }
+} catch {
+    Write-Warning "GitHub API недоступен, использую latest/download. Если установка упадёт, обнови Obsidian и повтори."
+}
+
+function Get-ReleaseAssetUrl {
+    param([string]$Name)
+    if ($releaseInfo) {
+        $asset = $releaseInfo.assets | Where-Object { $_.name -eq $Name } | Select-Object -First 1
+        if ($asset -and $asset.browser_download_url) {
+            return $asset.browser_download_url
+        }
+    }
+    return "$releaseBase/$Name"
+}
+
 if (-not (Test-Path (Join-Path $VaultPath ".obsidian"))) {
     Write-Host "В текущей папке нет Obsidian-vault." -ForegroundColor Yellow
     $VaultPath = Read-Host "Укажи путь к папке vault (где лежит .obsidian)"
@@ -48,13 +69,14 @@ $temp = Join-Path ([IO.Path]::GetTempPath()) ("neverlose-" + [Guid]::NewGuid().T
 New-Item -ItemType Directory -Force -Path $temp | Out-Null
 
 try {
-    Write-Host "Скачиваю Neverlose из GitHub Releases..." -ForegroundColor Cyan
+    $tag = if ($releaseInfo -and $releaseInfo.tag_name) { $releaseInfo.tag_name } else { "latest" }
+    Write-Host "Скачиваю Neverlose $tag из GitHub Releases..." -ForegroundColor Cyan
 
     $themeZip = Join-Path $temp "Neverlose.zip"
     $pluginZip = Join-Path $temp "neverlose-theme-settings.zip"
 
-    Invoke-WebRequest -Uri "$releaseBase/Neverlose.zip" -OutFile $themeZip -UseBasicParsing
-    Invoke-WebRequest -Uri "$releaseBase/neverlose-theme-settings.zip" -OutFile $pluginZip -UseBasicParsing
+    Invoke-WebRequest -Uri (Get-ReleaseAssetUrl "Neverlose.zip") -OutFile $themeZip -UseBasicParsing
+    Invoke-WebRequest -Uri (Get-ReleaseAssetUrl "neverlose-theme-settings.zip") -OutFile $pluginZip -UseBasicParsing
 
     Expand-Archive -Path $themeZip -DestinationPath (Join-Path $temp "theme") -Force
     Expand-Archive -Path $pluginZip -DestinationPath (Join-Path $temp "plugin") -Force

@@ -28,9 +28,35 @@ TMP="$(mktemp -d)"
 cleanup() { rm -rf "$TMP"; }
 trap cleanup EXIT
 
+THEME_URL=""
+PLUGIN_URL=""
+LATEST_JSON="$TMP/latest.json"
+
+if curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
+    -H "User-Agent: neverlose-installer" \
+    -H "Accept: application/vnd.github+json" \
+    -o "$LATEST_JSON" 2>/dev/null; then
+  if command -v python3 >/dev/null 2>&1; then
+    eval "$(python3 - "$LATEST_JSON" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as handle:
+    release = json.load(handle)
+assets = {asset.get("name"): asset.get("browser_download_url") for asset in release.get("assets", [])}
+print(f'THEME_URL="{assets.get("Neverlose.zip", "")}"')
+print(f'PLUGIN_URL="{assets.get("neverlose-theme-settings.zip", "")}"')
+PY
+)"
+  fi
+fi
+
+THEME_URL="${THEME_URL:-$RELEASE_BASE/Neverlose.zip}"
+PLUGIN_URL="${PLUGIN_URL:-$RELEASE_BASE/neverlose-theme-settings.zip}"
+
 echo "Downloading Neverlose..."
-curl -fsSL "$RELEASE_BASE/Neverlose.zip" -o "$TMP/Neverlose.zip"
-curl -fsSL "$RELEASE_BASE/neverlose-theme-settings.zip" -o "$TMP/neverlose-theme-settings.zip"
+curl -fsSL "$THEME_URL" -o "$TMP/Neverlose.zip"
+curl -fsSL "$PLUGIN_URL" -o "$TMP/neverlose-theme-settings.zip"
 
 unzip -q "$TMP/Neverlose.zip" -d "$TMP/theme"
 unzip -q "$TMP/neverlose-theme-settings.zip" -d "$TMP/plugin"
