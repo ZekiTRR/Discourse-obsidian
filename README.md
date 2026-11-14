@@ -42,7 +42,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "iwr https://raw.githubus
 Или явно укажи путь к vault:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -VaultPath "E:\Obsidian-learning\Learning"
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -VaultPath "C:\Users\You\Documents\MyVault"
 ```
 
 Скрипт скачает последний релиз, положит тему в
