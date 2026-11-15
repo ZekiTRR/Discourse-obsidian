@@ -1164,99 +1164,74 @@ body:not(.is-mobile):not(.is-popout-window):not(.is-popout-modal)
   color: var(--nle-fg-solid);
 }
 
-/* Category colors — matched to the forum badges.
-   Personal vault mapping first, then a generic fallback. */
-.nav-folder-title[data-path="00 - Hub"] {
+/* Category colors — generic fallback for top-level folders.
+   The settings plugin injects exact per-folder colors. When the plugin is
+   disabled, the first eight folders still cycle through the palette.
+   Obsidian 1.15+ keeps top-level items in an unnamed wrapper inside
+   .nav-files-container; older versions use .nav-folder.mod-root. */
+.nav-files-container > div > .nav-folder:nth-child(8n + 1 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-hub);
 }
-.nav-folder-title[data-path="01 - Subjects"] {
+.nav-files-container > div > .nav-folder:nth-child(8n + 2 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-subjects);
 }
-.nav-folder-title[data-path="02 - Projects"] {
+.nav-files-container > div > .nav-folder:nth-child(8n + 3 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-projects);
 }
-.nav-folder-title[data-path="03 - Bacalaureat"] {
+.nav-files-container > div > .nav-folder:nth-child(8n + 4 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-bac);
 }
-.nav-folder-title[data-path="99 - Archive"] {
+.nav-files-container > div > .nav-folder:nth-child(8n + 5 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-archive);
 }
-.nav-folder-title[data-path="_Attachments"] {
+.nav-files-container > div > .nav-folder:nth-child(8n + 6 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-attachments);
 }
-.nav-folder-title[data-path="_Templates"] {
+.nav-files-container > div > .nav-folder:nth-child(8n + 7 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-templates);
 }
-
-/* Let nested category dots inherit their section's badge color */
-.nav-folder:has(> .nav-folder-title[data-path="00 - Hub"]) {
-  --nle-cat-color: var(--nle-cat-hub);
-}
-.nav-folder:has(> .nav-folder-title[data-path="01 - Subjects"]) {
-  --nle-cat-color: var(--nle-cat-subjects);
-}
-.nav-folder:has(> .nav-folder-title[data-path="02 - Projects"]) {
-  --nle-cat-color: var(--nle-cat-projects);
-}
-.nav-folder:has(> .nav-folder-title[data-path="03 - Bacalaureat"]) {
-  --nle-cat-color: var(--nle-cat-bac);
-}
-.nav-folder:has(> .nav-folder-title[data-path="99 - Archive"]) {
-  --nle-cat-color: var(--nle-cat-archive);
-}
-.nav-folder:has(> .nav-folder-title[data-path="_Attachments"]) {
-  --nle-cat-color: var(--nle-cat-attachments);
-}
-.nav-folder:has(> .nav-folder-title[data-path="_Templates"]) {
-  --nle-cat-color: var(--nle-cat-templates);
+.nav-files-container > div > .nav-folder:nth-child(8n + 8 of .nav-folder) {
+  --nle-cat-color: var(--nle-cat-resell);
 }
 
 .nav-folder.mod-root
   > .nav-folder-children
-  > .nav-folder:nth-child(1)
-  > .nav-folder-title {
+  > .nav-folder:nth-child(8n + 1 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-hub);
 }
 .nav-folder.mod-root
   > .nav-folder-children
-  > .nav-folder:nth-child(2)
-  > .nav-folder-title {
+  > .nav-folder:nth-child(8n + 2 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-subjects);
 }
 .nav-folder.mod-root
   > .nav-folder-children
-  > .nav-folder:nth-child(3)
-  > .nav-folder-title {
+  > .nav-folder:nth-child(8n + 3 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-projects);
 }
 .nav-folder.mod-root
   > .nav-folder-children
-  > .nav-folder:nth-child(4)
-  > .nav-folder-title {
+  > .nav-folder:nth-child(8n + 4 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-bac);
 }
 .nav-folder.mod-root
   > .nav-folder-children
-  > .nav-folder:nth-child(5)
-  > .nav-folder-title {
+  > .nav-folder:nth-child(8n + 5 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-archive);
 }
 .nav-folder.mod-root
   > .nav-folder-children
-  > .nav-folder:nth-child(6)
-  > .nav-folder-title {
+  > .nav-folder:nth-child(8n + 6 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-attachments);
 }
 .nav-folder.mod-root
   > .nav-folder-children
-  > .nav-folder:nth-child(7)
-  > .nav-folder-title {
+  > .nav-folder:nth-child(8n + 7 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-templates);
 }
 .nav-folder.mod-root
   > .nav-folder-children
-  > .nav-folder:nth-child(8)
-  > .nav-folder-title {
+  > .nav-folder:nth-child(8n + 8 of .nav-folder) {
   --nle-cat-color: var(--nle-cat-resell);
 }
 

@@ -1,18 +1,42 @@
-const { Plugin, PluginSettingTab, Setting, MarkdownView } = require("obsidian");
+const {
+  Plugin,
+  PluginSettingTab,
+  Setting,
+  MarkdownView,
+  TFolder,
+} = require("obsidian");
 
-const CATEGORY_DEFS = [
-  { key: "hub", label: "00 - Hub", varName: "--nle-cat-hub" },
-  { key: "subjects", label: "01 - Subjects", varName: "--nle-cat-subjects" },
-  { key: "projects", label: "02 - Projects", varName: "--nle-cat-projects" },
-  { key: "bac", label: "03 - Bacalaureat", varName: "--nle-cat-bac" },
-  { key: "archive", label: "99 - Archive", varName: "--nle-cat-archive" },
-  {
-    key: "attachments",
-    label: "_Attachments",
-    varName: "--nle-cat-attachments",
-  },
-  { key: "templates", label: "_Templates", varName: "--nle-cat-templates" },
-];
+const CATEGORY_VARS = {
+  hub: "--nle-cat-hub",
+  subjects: "--nle-cat-subjects",
+  projects: "--nle-cat-projects",
+  bac: "--nle-cat-bac",
+  archive: "--nle-cat-archive",
+  attachments: "--nle-cat-attachments",
+  templates: "--nle-cat-templates",
+};
+
+const PALETTE_KEYS = Object.keys(CATEGORY_VARS);
+
+/* These folder names keep their meaning from the original forum layout.
+   Every other top-level folder simply gets the next palette color. */
+const LEGACY_FOLDER_SLOTS = {
+  "00 - Hub": "hub",
+  "01 - Subjects": "subjects",
+  "02 - Projects": "projects",
+  "03 - Bacalaureat": "bac",
+  "99 - Archive": "archive",
+  _Attachments: "attachments",
+  _Templates: "templates",
+};
+
+function escapeCssString(value) {
+  return String(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\r/g, "\\d ")
+    .replace(/\n/g, "\\a ");
+}
 
 const PRESETS = {
   discourse: {
@@ -104,6 +128,7 @@ const PRESETS = {
 const DEFAULT_SETTINGS = {
   preset: "discourse",
   colors: { ...PRESETS.discourse.colors },
+  folderColors: {},
   liquidTabs: true,
   timeline: true,
   timelineGutter: true,
@@ -160,13 +185,13 @@ class DiscourseSettingTab extends PluginSettingTab {
     containerEl.createEl("p", {
       cls: "setting-item-description",
       text:
-        "Пресеты меняют цвета сразу. Любой цвет можно поправить пипеткой — " +
-        "после этого режим станет «Свои цвета».",
+        "Цвета привязаны к верхнеуровневым папкам текущего хранилища. " +
+        "Пресет задаёт палитру, а каждый цвет можно поправить пипеткой.",
     });
 
     new Setting(containerEl)
       .setName("Пресет")
-      .setDesc("Готовая палитра для семи разделов.")
+      .setDesc("Готовая палитра для папок текущего хранилища.")
       .addDropdown((dropdown) => {
         this.plugin.presetDropdown = dropdown;
         for (const [id, preset] of Object.entries(PRESETS)) {
@@ -178,6 +203,7 @@ class DiscourseSettingTab extends PluginSettingTab {
           this.plugin.settings.preset = value;
           if (value !== "custom" && PRESETS[value]) {
             this.plugin.settings.colors = { ...PRESETS[value].colors };
+            this.plugin.settings.folderColors = {};
             this.plugin.applyColors();
             await this.plugin.saveSettings();
             this.display();
@@ -187,20 +213,30 @@ class DiscourseSettingTab extends PluginSettingTab {
         });
       });
 
-    for (const def of CATEGORY_DEFS) {
-      new Setting(containerEl)
-        .setName(def.label)
-        .setDesc(def.varName)
-        .addColorPicker((picker) => {
-          picker.setValue(this.plugin.settings.colors[def.key]);
-          picker.onChange(async (value) => {
-            this.plugin.settings.colors[def.key] = value;
-            this.plugin.settings.preset = "custom";
-            this.plugin.presetDropdown?.setValue("custom");
-            this.plugin.applyColors();
-            await this.plugin.saveSettings();
+    const folders = this.plugin.getTopFolders();
+    if (folders.length === 0) {
+      containerEl.createEl("p", {
+        cls: "setting-item-description",
+        text:
+          "В текущем хранилище пока нет папок. Создайте папку — она появится " +
+          "в этом списке после повторного открытия настроек.",
+      });
+    } else {
+      for (const [index, folder] of folders.entries()) {
+        new Setting(containerEl)
+          .setName(folder.name)
+          .setDesc("Цвет маркера и вложенных папок")
+          .addColorPicker((picker) => {
+            picker.setValue(this.plugin.getFolderColor(folder, index));
+            picker.onChange(async (value) => {
+              this.plugin.settings.folderColors[folder.path] = value;
+              this.plugin.settings.preset = "custom";
+              this.plugin.presetDropdown?.setValue("custom");
+              this.plugin.applyColors();
+              await this.plugin.saveSettings();
+            });
           });
-        });
+      }
     }
 
     new Setting(containerEl)
@@ -215,6 +251,7 @@ class DiscourseSettingTab extends PluginSettingTab {
             this.plugin.settings.colors = {
               ...PRESETS.discourse.colors,
             };
+            this.plugin.settings.folderColors = {};
             this.plugin.applyColors();
             await this.plugin.saveSettings();
             this.display();
@@ -266,6 +303,10 @@ class DiscourseSettingTab extends PluginSettingTab {
 
 module.exports = class DiscourseThemeSettings extends Plugin {
   async onload() {
+    this.folderStyleEl = document.createElement("style");
+    this.folderStyleEl.id = "discourse-folder-colors";
+    document.head.appendChild(this.folderStyleEl);
+
     await this.loadSettings();
     this.applyColors();
 
@@ -286,6 +327,7 @@ module.exports = class DiscourseThemeSettings extends Plugin {
       callback: async () => {
         this.settings.preset = "discourse";
         this.settings.colors = { ...PRESETS.discourse.colors };
+        this.settings.folderColors = {};
         this.applyColors();
         await this.saveSettings();
       },
@@ -333,6 +375,26 @@ module.exports = class DiscourseThemeSettings extends Plugin {
       }),
     );
 
+    this.registerEvent(
+      this.app.vault.on("create", (file) => {
+        if (file instanceof TFolder) this.applyFolderColors();
+      }),
+    );
+
+    this.registerEvent(
+      this.app.vault.on("delete", (file) => {
+        if (file instanceof TFolder) this.applyFolderColors();
+      }),
+    );
+
+    this.registerEvent(
+      this.app.vault.on("rename", (file, oldPath) => {
+        if (file instanceof TFolder) {
+          this.handleFolderRename(file, oldPath);
+        }
+      }),
+    );
+
     this.registerDomEvent(
       document,
       "scroll",
@@ -346,6 +408,7 @@ module.exports = class DiscourseThemeSettings extends Plugin {
     });
 
     this.app.workspace.onLayoutReady(() => {
+      this.applyFolderColors();
       this.refreshLiquid();
       this.mountTimeline();
     });
@@ -365,8 +428,13 @@ module.exports = class DiscourseThemeSettings extends Plugin {
     this.removeLiquid();
     this.unmountTimeline();
 
-    for (const def of CATEGORY_DEFS) {
-      document.body.style.removeProperty(def.varName);
+    for (const varName of Object.values(CATEGORY_VARS)) {
+      document.body.style.removeProperty(varName);
+    }
+
+    if (this.folderStyleEl) {
+      this.folderStyleEl.remove();
+      this.folderStyleEl = null;
     }
   }
 
@@ -379,10 +447,17 @@ module.exports = class DiscourseThemeSettings extends Plugin {
         ...DEFAULT_SETTINGS.colors,
         ...(saved.colors || {}),
       },
+      folderColors:
+        saved.folderColors && typeof saved.folderColors === "object"
+          ? { ...saved.folderColors }
+          : {},
     };
 
-    if (!PRESETS[this.settings.preset]) {
+    if (this.settings.preset !== "custom" && !PRESETS[this.settings.preset]) {
       this.settings.preset = "discourse";
+    }
+    if (Object.keys(this.settings.folderColors).length > 0) {
+      this.settings.preset = "custom";
     }
   }
 
@@ -390,12 +465,83 @@ module.exports = class DiscourseThemeSettings extends Plugin {
     await this.saveData(this.settings);
   }
 
-  applyColors() {
-    for (const def of CATEGORY_DEFS) {
+  getTopFolders() {
+    const root = this.app.vault.getRoot();
+    return (root?.children || [])
+      .filter((child) => child instanceof TFolder)
+      .sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+      );
+  }
+
+  getPalette() {
+    const fallback = PRESETS.discourse.colors;
+    return PALETTE_KEYS.map(
+      (key) => this.settings.colors[key] || fallback[key],
+    );
+  }
+
+  getFolderColor(folder, index) {
+    const override = this.settings.folderColors[folder.path];
+    if (override) return override;
+
+    const slot = LEGACY_FOLDER_SLOTS[folder.name];
+    if (slot) {
       const value =
-        this.settings.colors[def.key] || DEFAULT_SETTINGS.colors[def.key];
-      document.body.style.setProperty(def.varName, value);
+        this.settings.colors[slot] || PRESETS.discourse.colors[slot];
+      if (value) return value;
     }
+
+    const palette = this.getPalette();
+    return palette[index % palette.length];
+  }
+
+  applyFolderColors() {
+    if (!this.folderStyleEl) return;
+
+    const folders = this.getTopFolders();
+    const rules = [];
+
+    for (const [index, folder] of folders.entries()) {
+      const color = this.getFolderColor(folder, index);
+      if (!color) continue;
+
+      const path = escapeCssString(folder.path);
+      rules.push(
+        `.nav-folder-title[data-path="${path}"] { --nle-cat-color: ${color} !important; }`,
+      );
+      rules.push(
+        `.nav-folder:has(> .nav-folder-title[data-path="${path}"]) { --nle-cat-color: ${color} !important; }`,
+      );
+    }
+
+    this.folderStyleEl.textContent = rules.join("\n");
+  }
+
+  handleFolderRename(file, oldPath) {
+    const map = this.settings.folderColors;
+    let changed = false;
+
+    for (const key of Object.keys(map)) {
+      if (key === oldPath || key.startsWith(oldPath + "/")) {
+        const newKey = file.path + key.slice(oldPath.length);
+        map[newKey] = map[key];
+        delete map[key];
+        changed = true;
+      }
+    }
+
+    this.applyFolderColors();
+    if (changed) this.saveSettings();
+  }
+
+  applyColors() {
+    for (const [key, varName] of Object.entries(CATEGORY_VARS)) {
+      const value = this.settings.colors[key] || DEFAULT_SETTINGS.colors[key];
+      document.body.style.setProperty(varName, value);
+    }
+
+    this.applyFolderColors();
   }
 
   /* ------------------------------------------------------------------ */

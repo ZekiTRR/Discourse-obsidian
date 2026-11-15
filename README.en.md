@@ -25,7 +25,8 @@ timeline.
   pane.
 - **Full width**: the theme respects Obsidian's `Readable line length` setting.
   When it is off, text is not locked into a centered rectangle.
-- **Category colors**: seven presets plus a color picker per folder.
+- **Category colors**: seven presets plus a color picker for every top-level
+  folder in the current vault.
 - **Details**: aligned header buttons, fixed `Ctrl+F` search spacing, centered
   toggle checkboxes, Inter + JetBrains Mono, styled tables, callouts,
   `<details>`, code blocks and quotes.
@@ -90,7 +91,8 @@ or use the command palette:
 Available options:
 
 - **Preset** — `Discourse Dark / Discord / GitHub / Cyberpunk / Pastel / Nord / Monochrome`.
-- **Per-category color** — color picker.
+  The palette is distributed across the current vault's top-level folders.
+- **Per-folder color** — color picker; the list is built from the vault's folders.
 - **Reset colors** — restore the default palette.
 - **Liquid glass tabs** — on/off.
 - **Block timeline** — on/off.
@@ -100,20 +102,22 @@ Available options:
 The settings labels in the current build are in Russian; the options above map
 to them in order.
 
-## Default category colors
+## Default palette
 
-| Folder | Color |
-| --- | --- |
-| `00 - Hub` | `#0088cc` |
-| `01 - Subjects` | `#bf1e2e` |
-| `02 - Projects` | `#e45735` |
+| Folder             | Color     |
+| ------------------ | --------- |
+| `00 - Hub`         | `#0088cc` |
+| `01 - Subjects`    | `#bf1e2e` |
+| `02 - Projects`    | `#e45735` |
 | `03 - Bacalaureat` | `#92278f` |
-| `99 - Archive` | `#25aae2` |
-| `_Attachments` | `#9eb83b` |
-| `_Templates` | `#fbbf24` |
+| `99 - Archive`     | `#25aae2` |
+| `_Attachments`     | `#9eb83b` |
+| `_Templates`       | `#fbbf24` |
 
-Unknown vaults fall back to an `nth-child` color cycle; this vault uses explicit
-`data-path` mappings.
+Folders with these names keep their fixed colors in any vault. Every other
+top-level folder receives the palette in alphabetical order. The plugin reads
+the actual folders of the current vault, so the settings list always matches the
+open vault. Without the plugin, a fallback cycle colors folders by their order.
 
 ## Repository layout
 
@@ -155,15 +159,15 @@ archives are the recommended path.
 
 ## Theme mapping
 
-| Discourse UI | Obsidian |
-| --- | --- |
-| `Main / Forum / Market / Help` pill navigation | Tab pill strip |
-| `CATEGORIES` with colored squares | Folders with colored markers |
-| Subcategories | Subfolder dots in the section color |
-| Topic title | Note title |
-| Post, quote, details, tables | Markdown styles |
-| Right-hand topic timeline | Block timeline with labels |
-| Dark glass panels | Glass panels, rings, blur |
+| Discourse UI                                   | Obsidian                            |
+| ---------------------------------------------- | ----------------------------------- |
+| `Main / Forum / Market / Help` pill navigation | Tab pill strip                      |
+| `CATEGORIES` with colored squares              | Folders with colored markers        |
+| Subcategories                                  | Subfolder dots in the section color |
+| Topic title                                    | Note title                          |
+| Post, quote, details, tables                   | Markdown styles                     |
+| Right-hand topic timeline                      | Block timeline with labels          |
+| Dark glass panels                              | Glass panels, rings, blur           |
 
 ## Licenses
 
