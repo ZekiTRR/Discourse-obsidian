@@ -2831,6 +2831,20 @@ button.mod-warning:hover {
   background: transparent;
 }
 
+/* Kanban Plus renders lane titles and card text inside .markdown-preview-view.
+   The reading-view page padding must not inflate lanes or cards. */
+.kanban-plugin .markdown-preview-view,
+.kanban-plugin__markdown-preview-wrapper .markdown-preview-view {
+  padding: 0;
+  --file-margins: 0;
+}
+
+.kanban-plugin .markdown-preview-sizer,
+.kanban-plugin__markdown-preview-wrapper .markdown-preview-sizer {
+  max-width: none !important;
+  margin-inline: 0 !important;
+}
+
 .kanban-plugin__lane {
   border: 0;
   border-radius: var(--nle-radius-card);

@@ -27,6 +27,8 @@ timeline.
   When it is off, text is not locked into a centered rectangle.
 - **Category colors**: seven presets plus a color picker for every top-level
   folder in the current vault.
+- **Kanban Plus**: boards, lanes and cards keep the plugin's compact sizes and
+  are not stretched by the theme.
 - **Details**: aligned header buttons, fixed `Ctrl+F` search spacing, centered
   toggle checkboxes, Inter + JetBrains Mono, styled tables, callouts,
   `<details>`, code blocks and quotes.
